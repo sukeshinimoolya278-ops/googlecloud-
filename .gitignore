@@ -1,0 +1,23 @@
+# Python
+backend/venv/
+backend/app.db
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache
+.pytest_cache/
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Environment files with secrets
+backend/.env
+frontend/.env.local
+
+# OS
+.DS_Store
+Thumbs.db

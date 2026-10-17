@@ -1,0 +1,18 @@
+LIPID PANEL & CARDIOVASCULAR RISK EVALUATION
+Patient Name: Rahul Sharma             Age: 42 Years / Male
+Referred By: Dr. Emily Peterson        Date: 2025-01-20
+Specimen: Serum Fasting (12 hrs)       ID: LAB-2025-4102
+
+LIPID PROFILE TEST RESULTS
+========================================================================================
+Test Description               Value             Desirable Range    Units     Status
+----------------------------------------------------------------------------------------
+Total Cholesterol              185.0             125.0 - 200.0      mg/dL     NORMAL
+Serum Triglycerides            142.0             50.0 - 150.0       mg/dL     NORMAL
+HDL Cholesterol ("Good")       45.0              40.0 - 60.0        mg/dL     NORMAL
+LDL Cholesterol ("Calculated") 111.6             < 100.0            mg/dL     BORDERLINE
+VLDL Cholesterol               28.4              10.0 - 30.0        mg/dL     NORMAL
+Cholesterol / HDL Ratio        4.1               < 4.5              Ratio     NORMAL
+========================================================================================
+Notes: Maintain low saturated fat diet, 30 mins brisk walking daily.
+Signed: Dr. S. Nair, MD (Biochemistry)
