@@ -95,34 +95,34 @@ export default function DoctorPortalPage() {
   return (
     <div className="space-y-5 pb-12">
       {/* Doctor Header Banner */}
-      <div className="p-4 rounded-3xl bg-slate-900 text-white flex items-center justify-between shadow-xl">
+      <div className="p-5 rounded-3xl bg-teal-900 text-white flex items-center justify-between shadow-xl border-2 border-teal-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-purple-500/30 text-purple-300 flex items-center justify-center border border-purple-400/30">
-            <Stethoscope size={22} />
+          <div className="w-12 h-12 rounded-2xl bg-white/20 text-white flex items-center justify-center border border-white/30">
+            <Stethoscope size={24} />
           </div>
           <div>
-            <span className="text-[10px] font-bold tracking-wider uppercase text-purple-300">
+            <span className="text-[11px] font-black tracking-wider uppercase text-emerald-300">
               Verified Clinical Access
             </span>
-            <h1 className="text-base font-extrabold text-white">
+            <h1 className="text-lg font-black text-white">
               {patient?.name} ({patient?.age}M)
             </h1>
           </div>
         </div>
-        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+        <span className="text-xs font-black px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
           Session Active
         </span>
       </div>
 
       {/* Verified Identity & Official Records Trust Banner */}
-      <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div className="p-3.5 bg-emerald-50 border-2 border-emerald-300 rounded-2xl flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-2">
-          <CheckCircle2 size={16} className="text-emerald-600" />
-          <span className="font-bold text-emerald-900">
+          <CheckCircle2 size={16} className="text-emerald-700" />
+          <span className="font-black text-emerald-950">
             Official ABHA Identity Match: <strong>91-4829-1029-4821</strong> (Aadhaar e-KYC Verified)
           </span>
         </div>
-        <span className="text-[11px] font-bold text-emerald-800 bg-emerald-200/60 px-2.5 py-0.5 rounded-md">
+        <span className="text-[11px] font-black text-emerald-900 bg-emerald-200 px-3 py-1 rounded-full">
           NABL Accredited Records
         </span>
       </div>
@@ -147,36 +147,36 @@ export default function DoctorPortalPage() {
       </div>
 
       {/* One-Page Clinical AI Summary */}
-      <div className="card-aesthetic p-5 bg-purple-50/80 border border-purple-100">
-        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 text-sm">
-          <Sparkles size={16} className="text-purple-600" />
+      <div className="card-aesthetic p-6 bg-teal-50 border-2 border-teal-200">
+        <div className="flex items-center gap-2 mb-2 font-black text-teal-950 text-base">
+          <Sparkles size={18} className="text-teal-700" />
           <span>One-Page Clinical Summary</span>
         </div>
-        <p className="text-xs text-slate-700 leading-relaxed font-normal whitespace-pre-line">
+        <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium whitespace-pre-line">
           {data?.summary}
         </p>
-        <p className="text-[10px] text-slate-400 mt-2 italic">{data?.disclaimer}</p>
+        <p className="text-[11px] text-slate-500 mt-2 italic font-semibold">{data?.disclaimer}</p>
       </div>
 
       {/* Active Medications & Recent Labs Grid on PC */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Active Medications */}
         <div className="card-aesthetic p-5 space-y-3">
-          <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-            <Pill size={16} className="text-purple-600" />
+          <h3 className="font-black text-slate-900 text-sm sm:text-base flex items-center gap-2">
+            <Pill size={18} className="text-teal-700" />
             <span>Active Medications</span>
           </h3>
           <div className="space-y-2">
             {data?.active_medicines?.map((m: any) => (
               <div
                 key={m.id}
-                className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs"
+                className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs sm:text-sm"
               >
                 <div>
-                  <span className="font-bold text-slate-800">{m.name}</span>
-                  <span className="text-slate-500 ml-2 font-medium">{m.dose}</span>
+                  <span className="font-black text-slate-900">{m.name}</span>
+                  <span className="text-slate-500 ml-2 font-semibold">{m.dose}</span>
                 </div>
-                <span className="text-purple-700 font-medium">{m.frequency}</span>
+                <span className="text-teal-800 font-bold">{m.frequency}</span>
               </div>
             ))}
           </div>
@@ -184,8 +184,8 @@ export default function DoctorPortalPage() {
 
         {/* Recent Labs */}
         <div className="card-aesthetic p-5 space-y-3">
-          <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-            <FileText size={16} className="text-purple-600" />
+          <h3 className="font-black text-slate-900 text-sm sm:text-base flex items-center gap-2">
+            <FileText size={18} className="text-teal-700" />
             <span>Recent Verified Lab Results</span>
           </h3>
           <div className="space-y-2">

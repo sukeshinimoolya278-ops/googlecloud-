@@ -55,12 +55,12 @@ export function OnboardingModal({ onComplete }: { onComplete: () => void }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
       <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-purple-700 p-6 text-white text-center relative">
+        <div className="bg-teal-800 p-6 text-white text-center relative">
           <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
             <HeartPulse size={30} className="text-white" />
           </div>
           <h2 className="text-2xl font-black tracking-tight">Welcome to Health Vault!</h2>
-          <p className="text-purple-100 text-sm mt-1">Let&apos;s set up your digital medical card in 30 seconds.</p>
+          <p className="text-teal-100 text-sm mt-1">Let&apos;s set up your digital medical card in 30 seconds.</p>
         </div>
 
         {/* Content Body */}
@@ -68,7 +68,7 @@ export function OnboardingModal({ onComplete }: { onComplete: () => void }) {
           {/* Full Name */}
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-              <User size={16} className="text-purple-600" />
+              <User size={16} className="text-teal-700" />
               <span>Your Full Name</span>
             </label>
             <input
@@ -76,14 +76,14 @@ export function OnboardingModal({ onComplete }: { onComplete: () => void }) {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="e.g. Ramesh Sharma"
-              className="w-full text-base sm:text-lg font-medium px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition-all"
+              className="w-full text-base sm:text-lg font-medium px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-teal-600 focus:ring-4 focus:ring-teal-100 outline-none transition-all"
             />
           </div>
 
           {/* Preferred Language */}
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-              <Globe size={16} className="text-purple-600" />
+              <Globe size={16} className="text-teal-700" />
               <span>Preferred Explanation Language</span>
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -94,7 +94,7 @@ export function OnboardingModal({ onComplete }: { onComplete: () => void }) {
                   onClick={() => setLanguage(lang.code)}
                   className={`py-3 px-3 rounded-2xl font-bold text-sm border-2 transition-all text-center ${
                     language === lang.code
-                      ? "border-purple-600 bg-purple-50 text-purple-700 shadow-sm"
+                      ? "border-teal-600 bg-teal-50 text-teal-900 shadow-sm"
                       : "border-slate-200 hover:border-slate-300 bg-white text-slate-700"
                   }`}
                 >
@@ -140,7 +140,7 @@ export function OnboardingModal({ onComplete }: { onComplete: () => void }) {
                 value={contactName}
                 onChange={(e) => setContactName(e.target.value)}
                 placeholder="Contact Name (e.g. Pooja Sharma)"
-                className="w-full text-sm font-medium px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none"
+                className="w-full text-sm font-medium px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white focus:border-teal-600 outline-none"
               />
               <div className="grid grid-cols-2 gap-2">
                 <input
@@ -148,12 +148,12 @@ export function OnboardingModal({ onComplete }: { onComplete: () => void }) {
                   value={contactPhone}
                   onChange={(e) => setContactPhone(e.target.value)}
                   placeholder="Phone Number"
-                  className="w-full text-sm font-medium px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none"
+                  className="w-full text-sm font-medium px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white focus:border-teal-600 outline-none"
                 />
                 <select
                   value={contactRelation}
                   onChange={(e) => setContactRelation(e.target.value)}
-                  className="w-full text-sm font-medium px-3 py-2.5 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none"
+                  className="w-full text-sm font-medium px-3 py-2.5 rounded-xl border border-slate-200 bg-white focus:border-teal-600 outline-none"
                 >
                   <option value="Daughter">Daughter</option>
                   <option value="Son">Son</option>
@@ -181,7 +181,7 @@ export function OnboardingModal({ onComplete }: { onComplete: () => void }) {
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="w-full sm:w-auto order-1 sm:order-2 flex items-center justify-center gap-2 py-3.5 px-7 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-base shadow-md transition-all active:scale-95 disabled:opacity-50"
+            className="w-full sm:w-auto order-1 sm:order-2 flex items-center justify-center gap-2 py-3.5 px-7 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white font-extrabold text-base shadow-md transition-all active:scale-95 disabled:opacity-50"
           >
             <Sparkles size={18} />
             <span>{saving ? "Saving..." : "Save & Continue"}</span>

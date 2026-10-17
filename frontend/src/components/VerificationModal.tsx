@@ -163,7 +163,7 @@ export function VerificationModal({
         {/* Header */}
         <div className="p-4 sm:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-purple-700 flex items-center justify-center text-white shadow-md">
+            <div className="w-10 h-10 rounded-2xl bg-teal-700 flex items-center justify-center text-white shadow-md">
               <Sparkles size={20} />
             </div>
             <div>
@@ -193,7 +193,7 @@ export function VerificationModal({
           {/* Left: Original Document Source */}
           <div className="p-4 sm:p-6 bg-slate-50/70 flex flex-col items-center justify-center min-h-[220px]">
             <div className="w-full h-full max-h-[380px] rounded-2xl border-2 border-dashed border-slate-300 bg-white p-5 flex flex-col items-center justify-center text-center shadow-inner relative overflow-hidden">
-              <div className="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center text-purple-600 mb-3">
+              <div className="w-14 h-14 rounded-2xl bg-teal-100 flex items-center justify-center text-teal-700 mb-3">
                 <FileText size={32} />
               </div>
               <p className="font-extrabold text-slate-900 text-sm">{fileName}</p>
@@ -248,7 +248,7 @@ export function VerificationModal({
 
             {isLoadingDetails ? (
               <div className="py-12 text-center space-y-2">
-                <Loader2 size={24} className="animate-spin text-purple-600 mx-auto" />
+                <Loader2 size={24} className="animate-spin text-teal-700 mx-auto" />
                 <p className="text-xs font-bold text-slate-600">Loading extracted fields...</p>
               </div>
             ) : (
@@ -272,7 +272,7 @@ export function VerificationModal({
                               type="text"
                               value={item.test_name}
                               onChange={(e) => handleLabChange(idx, "test_name", e.target.value)}
-                              className="font-bold text-slate-900 text-sm bg-transparent border-b border-transparent hover:border-slate-300 focus:border-purple-500 focus:outline-none w-2/3"
+                              className="font-bold text-slate-900 text-sm bg-transparent border-b border-transparent hover:border-slate-300 focus:border-teal-600 focus:outline-none w-2/3"
                             />
                             <span
                               className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
@@ -293,7 +293,7 @@ export function VerificationModal({
                                 step="any"
                                 value={item.value}
                                 onChange={(e) => handleLabChange(idx, "value", e.target.value)}
-                                className="w-full mt-1 p-2 rounded-xl border border-slate-200 bg-white font-extrabold text-slate-900 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+                                className="w-full mt-1 p-2 rounded-xl border border-slate-200 bg-white font-extrabold text-slate-900 focus:ring-2 focus:ring-teal-400 focus:outline-none"
                               />
                             </div>
                             <div>
@@ -302,7 +302,7 @@ export function VerificationModal({
                                 type="text"
                                 value={item.unit}
                                 onChange={(e) => handleLabChange(idx, "unit", e.target.value)}
-                                className="w-full mt-1 p-2 rounded-xl border border-slate-200 bg-white font-semibold text-slate-800 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+                                className="w-full mt-1 p-2 rounded-xl border border-slate-200 bg-white font-semibold text-slate-800 focus:ring-2 focus:ring-teal-400 focus:outline-none"
                               />
                             </div>
                           </div>

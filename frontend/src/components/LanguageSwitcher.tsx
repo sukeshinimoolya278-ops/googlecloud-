@@ -25,10 +25,10 @@ export function LanguageSwitcher() {
           <button
             key={lang.code}
             onClick={() => setLanguage(lang.code)}
-            className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
+            className={`px-3 py-1.5 rounded-full text-xs font-black transition-all ${
               isActive
-                ? "bg-purple-700 text-white shadow-sm scale-105"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
+                ? "bg-teal-700 text-white shadow-sm scale-105"
+                : "text-slate-700 hover:text-slate-950 hover:bg-slate-200/70"
             }`}
           >
             {lang.native}

@@ -282,19 +282,19 @@ export default function LoginPage() {
 
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden">
         {/* Top Hero Brand Header */}
-        <div className="bg-purple-700 p-7 text-white text-center relative overflow-hidden">
+        <div className="bg-teal-800 p-7 text-white text-center relative overflow-hidden">
           <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mx-auto mb-3.5 shadow-inner">
             <HeartPulse size={36} className="text-white" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">QR Health Vault</h1>
-          <p className="text-purple-100 text-sm font-medium mt-1">
-            Your medical history, one scan away.
+          <p className="text-teal-100 text-sm font-semibold mt-1">
+            Official Patient &amp; Emergency Medical Portal
           </p>
         </div>
 
         {/* Error Alert Banner */}
         {error && (
-          <div className="mx-6 mt-6 p-4 rounded-2xl bg-rose-50 border-2 border-rose-200 text-rose-800 text-sm font-semibold flex items-start gap-3 animate-fade-in">
+          <div className="mx-6 mt-6 p-4 rounded-2xl bg-rose-50 border-2 border-rose-300 text-rose-900 text-sm font-bold flex items-start gap-3 animate-fade-in">
             <AlertCircle size={20} className="text-rose-600 shrink-0 mt-0.5" />
             <div className="flex-1">{error}</div>
           </div>
@@ -309,7 +309,7 @@ export default function LoginPage() {
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                 Sign In to Your Vault
               </h2>
-              <p className="text-slate-500 text-sm mt-1">
+              <p className="text-slate-600 text-sm font-medium mt-1">
                 Choose how you want to sign in
               </p>
             </div>
@@ -321,7 +321,7 @@ export default function LoginPage() {
                 setError(null);
                 setMode("PHONE_INPUT");
               }}
-              className="w-full group flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-lg sm:text-xl shadow-md transition-all active:scale-[0.98]"
+              className="w-full group flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white font-extrabold text-lg sm:text-xl shadow-md transition-all active:scale-[0.98]"
             >
               <div className="flex items-center gap-3.5">
                 <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
@@ -329,7 +329,7 @@ export default function LoginPage() {
                 </div>
                 <div className="text-left">
                   <div className="leading-tight">Continue with Phone</div>
-                  <div className="text-xs text-purple-100 font-medium mt-0.5">Fast 6-digit OTP via SMS</div>
+                  <div className="text-xs text-teal-100 font-medium mt-0.5">Fast 6-digit OTP via SMS</div>
                 </div>
               </div>
               <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
@@ -342,7 +342,7 @@ export default function LoginPage() {
                 setError(null);
                 setMode("GMAIL_INPUT");
               }}
-              className="w-full group flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 border-slate-300 hover:border-purple-600 bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-lg sm:text-xl transition-all shadow-sm active:scale-[0.98]"
+              className="w-full group flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 border-slate-300 hover:border-teal-600 bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-lg sm:text-xl transition-all shadow-sm active:scale-[0.98]"
             >
               <div className="flex items-center gap-3.5">
                 <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center">
@@ -371,7 +371,7 @@ export default function LoginPage() {
                   <div className="text-xs text-slate-500 font-medium mt-0.5">Choose or enter your Gmail</div>
                 </div>
               </div>
-              <ArrowRight size={22} className="text-slate-400 group-hover:translate-x-1 group-hover:text-purple-600 transition-all" />
+              <ArrowRight size={22} className="text-slate-400 group-hover:translate-x-1 group-hover:text-teal-700 transition-all" />
             </button>
 
             {/* Quick Demo Reviewer Button */}
@@ -379,7 +379,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={handleDemoLogin}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-sm transition-all border border-purple-200 shadow-2xs"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold text-sm transition-all border border-teal-200 shadow-2xs"
               >
                 <Sparkles size={16} />
                 <span>Instant Hackathon Demo (Ramesh Sharma)</span>
@@ -400,15 +400,15 @@ export default function LoginPage() {
                   setError(null);
                   setMode("SELECT_METHOD");
                 }}
-                className="text-xs font-bold text-purple-600 hover:text-purple-800 mb-2 inline-flex items-center gap-1"
+                className="text-xs font-bold text-teal-700 hover:text-teal-900 mb-2 inline-flex items-center gap-1"
               >
                 ← Back to sign-in options
               </button>
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                <Mail size={24} className="text-purple-700" />
+                <Mail size={24} className="text-teal-700" />
                 <span>Sign In with Gmail</span>
               </h2>
-              <p className="text-slate-500 text-sm mt-1">
+              <p className="text-slate-600 text-sm mt-1">
                 Choose an account via Google popup or type your Gmail address.
               </p>
             </div>
@@ -419,7 +419,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleGooglePopup}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl border-2 border-slate-300 hover:border-purple-600 bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-base transition-all shadow-xs"
+                className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl border-2 border-slate-300 hover:border-teal-600 bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-base transition-all shadow-xs"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -452,7 +452,7 @@ export default function LoginPage() {
                     value={gmailAddress}
                     onChange={(e) => setGmailAddress(e.target.value)}
                     placeholder="e.g. yourname@gmail.com"
-                    className="w-full text-base sm:text-lg font-semibold px-4 py-3.5 rounded-2xl border-2 border-slate-200 focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none"
+                    className="w-full text-base sm:text-lg font-semibold px-4 py-3.5 rounded-2xl border-2 border-slate-200 focus:border-teal-600 focus:ring-4 focus:ring-teal-100 outline-none"
                   />
                 </div>
               </div>
@@ -479,7 +479,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading || !gmailAddress.includes("@")}
-                className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-lg shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white font-extrabold text-lg shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
               >
                 {loading ? (
                   <>
@@ -509,14 +509,14 @@ export default function LoginPage() {
                   setError(null);
                   setMode("SELECT_METHOD");
                 }}
-                className="text-xs font-bold text-purple-600 hover:text-purple-800 mb-2 inline-flex items-center gap-1"
+                className="text-xs font-bold text-teal-700 hover:text-teal-900 mb-2 inline-flex items-center gap-1"
               >
                 ← Back to sign-in options
               </button>
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                 Enter Phone Number
               </h2>
-              <p className="text-slate-500 text-sm mt-1">
+              <p className="text-slate-600 text-sm mt-1">
                 We will send a 6-digit verification code to your mobile.
               </p>
             </div>
@@ -526,7 +526,7 @@ export default function LoginPage() {
               <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">
                 Mobile Number
               </label>
-              <div className="flex items-center rounded-2xl border-2 border-slate-200 focus-within:border-purple-600 focus-within:ring-4 focus-within:ring-purple-100 transition-all bg-white overflow-hidden shadow-2xs">
+              <div className="flex items-center rounded-2xl border-2 border-slate-200 focus-within:border-teal-600 focus-within:ring-4 focus-within:ring-teal-100 transition-all bg-white overflow-hidden shadow-2xs">
                 {/* Editable / Selectable Country Code */}
                 <select
                   value={countryCode}
@@ -556,7 +556,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading || phoneNumber.length < 7}
-              className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-lg shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white font-extrabold text-lg shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
             >
               {loading ? (
                 <>
@@ -585,14 +585,14 @@ export default function LoginPage() {
                   setError(null);
                   setMode("PHONE_INPUT");
                 }}
-                className="text-xs font-bold text-purple-600 hover:text-purple-800 mb-2 inline-flex items-center gap-1"
+                className="text-xs font-bold text-teal-700 hover:text-teal-900 mb-2 inline-flex items-center gap-1"
               >
                 ← Edit phone number
               </button>
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                 Enter Verification Code
               </h2>
-              <p className="text-slate-500 text-sm mt-1">
+              <p className="text-slate-600 text-sm mt-1">
                 Sent to <span className="font-bold text-slate-800">{countryCode} {phoneNumber}</span>
               </p>
             </div>
@@ -609,7 +609,7 @@ export default function LoginPage() {
                   value={digit}
                   onChange={(e) => handleOtpChange(idx, e.target.value)}
                   onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                  className="w-11 h-14 sm:w-14 sm:h-16 text-center text-2xl sm:text-3xl font-black text-slate-900 rounded-2xl border-2 border-slate-200 focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition-all bg-slate-50 focus:bg-white shadow-2xs"
+                  className="w-11 h-14 sm:w-14 sm:h-16 text-center text-2xl sm:text-3xl font-black text-slate-900 rounded-2xl border-2 border-slate-200 focus:border-teal-600 focus:ring-4 focus:ring-teal-100 outline-none transition-all bg-slate-50 focus:bg-white shadow-2xs"
                 />
               ))}
             </div>
@@ -619,7 +619,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleVerifyOtp()}
               disabled={loading || otp.some((d) => !d)}
-              className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-lg shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white font-extrabold text-lg shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
             >
               {loading ? (
                 <>
@@ -629,7 +629,7 @@ export default function LoginPage() {
               ) : (
                 <>
                   <CheckCircle2 size={20} />
-                  <span>Verify & Enter Vault</span>
+                  <span>Verify &amp; Enter Vault</span>
                 </>
               )}
             </button>
@@ -640,30 +640,30 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={handleResendOtp}
-                  className="text-sm font-extrabold text-purple-600 hover:text-purple-800 underline decoration-2 underline-offset-4"
+                  className="text-sm font-extrabold text-teal-700 hover:text-teal-900 underline decoration-2 underline-offset-4"
                 >
                   Resend Code via SMS
                 </button>
               ) : (
-                <div className="text-sm text-slate-400 font-medium">
-                  Resend code in <span className="font-bold text-slate-700">{resendTimer}s</span>
+                <div className="text-sm text-slate-500 font-semibold">
+                  Resend code in <span className="font-bold text-slate-800">{resendTimer}s</span>
                 </div>
               )}
             </div>
 
             {/* Fallback tip */}
-            <div className="p-3 rounded-xl bg-purple-50/70 border border-purple-100 text-center">
-              <span className="text-xs text-purple-800 font-medium">
-                Tip: In Demo Mode, enter <strong className="font-extrabold">123456</strong> to sign in immediately.
+            <div className="p-3.5 rounded-2xl bg-teal-50 border border-teal-200 text-center">
+              <span className="text-xs text-teal-900 font-semibold">
+                Tip: In Demo Mode, enter <strong className="font-black text-teal-950">123456</strong> to sign in immediately.
               </span>
             </div>
           </div>
         )}
 
         {/* Security Footer Notice */}
-        <div className="bg-slate-50 px-6 py-4 border-t border-slate-100 flex items-center justify-center gap-2 text-xs text-slate-500 font-medium">
-          <ShieldCheck size={16} className="text-emerald-600" />
-          <span>Protected with 256-bit AES encryption & Firebase Auth</span>
+        <div className="bg-slate-50 px-6 py-4 border-t border-slate-100 flex items-center justify-center gap-2 text-xs text-slate-500 font-semibold">
+          <ShieldCheck size={16} className="text-emerald-700" />
+          <span>Protected with 256-bit AES encryption &amp; Firebase Auth</span>
         </div>
       </div>
     </div>

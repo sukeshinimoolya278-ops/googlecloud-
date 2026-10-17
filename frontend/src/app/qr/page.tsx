@@ -140,49 +140,49 @@ export default function QRPage() {
       </div>
 
       {/* Tabs Switcher */}
-      <div className="flex p-1.5 bg-slate-100 rounded-2xl border border-slate-200 overflow-x-auto max-w-xl">
+      <div className="flex p-1.5 bg-slate-100 rounded-2xl border-2 border-slate-200 overflow-x-auto max-w-xl">
         <button
           onClick={() => setActiveTab("doctor")}
-          className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 ${
+          className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-black transition-all shrink-0 ${
             activeTab === "doctor"
-              ? "bg-white text-purple-700 shadow-sm"
+              ? "bg-teal-700 text-white shadow-sm"
               : "text-slate-600 hover:text-slate-900"
           }`}
         >
-          Doctor QR
+          👨‍⚕️ Doctor QR
         </button>
         <button
           onClick={() => setActiveTab("emergency")}
-          className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 ${
+          className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-black transition-all shrink-0 ${
             activeTab === "emergency"
-              ? "bg-rose-600 text-white shadow-sm"
+              ? "bg-rose-700 text-white shadow-sm"
               : "text-slate-600 hover:text-slate-900"
           }`}
         >
-          Emergency QR
+          🚨 Emergency QR
         </button>
         <button
           onClick={() => setActiveTab("consent")}
-          className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 relative ${
+          className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-black transition-all shrink-0 relative ${
             activeTab === "consent"
-              ? "bg-white text-purple-700 shadow-sm"
+              ? "bg-teal-700 text-white shadow-sm"
               : "text-slate-600 hover:text-slate-900"
           }`}
         >
-          Consent Manager
+          ⏱️ Consent Manager
           {requests.some((r) => r.status === "pending") && (
-            <span className="w-2 h-2 rounded-full bg-rose-500 absolute top-2 right-2 animate-ping" />
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 absolute top-2 right-2 animate-ping" />
           )}
         </button>
         <button
           onClick={() => setActiveTab("logs")}
-          className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 ${
+          className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-black transition-all shrink-0 ${
             activeTab === "logs"
-              ? "bg-white text-purple-700 shadow-sm"
+              ? "bg-teal-700 text-white shadow-sm"
               : "text-slate-600 hover:text-slate-900"
           }`}
         >
-          Audit Log
+          📋 Audit Log
         </button>
       </div>
 
@@ -190,14 +190,14 @@ export default function QRPage() {
       {activeTab === "doctor" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* QR Card (lg:col-span-5) */}
-          <div className="lg:col-span-5 card-aesthetic p-6 sm:p-8 flex flex-col items-center text-center">
-            <span className="badge-pill-indigo mb-3">
+          <div className="lg:col-span-5 card-aesthetic p-6 sm:p-8 flex flex-col items-center text-center border-2 border-slate-200">
+            <span className="badge-pill-medical mb-3">
               Doctor Access Portal
             </span>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900">
               Consent-Locked Doctor QR
             </h2>
-            <p className="text-xs text-slate-500 max-w-xs mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 max-w-xs mt-1 font-medium">
               Encodes only a random unguessable URL token. No raw clinical data is ever stored inside the QR.
             </p>
 
@@ -214,14 +214,14 @@ export default function QRPage() {
               <a
                 href="/api/qr/image/full"
                 download="Doctor_Health_QR.png"
-                className="btn-primary text-xs sm:text-sm py-3 flex-1"
+                className="btn-primary text-xs sm:text-sm py-3.5 flex-1"
               >
                 <Download size={18} /> Download QR
               </a>
               <button
                 onClick={() => handleRegenerate("full")}
                 disabled={isRegenerating}
-                className="p-3.5 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-700 transition-all shadow-xs"
+                className="p-3.5 bg-slate-100 hover:bg-slate-200 rounded-2xl text-slate-700 transition-all border border-slate-200 active:scale-95"
                 title="Revoke &amp; Regenerate Token"
               >
                 <RefreshCw size={18} className={isRegenerating ? "animate-spin" : ""} />
@@ -233,7 +233,7 @@ export default function QRPage() {
                 href={tokens.doctor_url}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-4 text-xs font-semibold text-purple-600 hover:underline flex items-center gap-1.5"
+                className="mt-4 text-xs font-bold text-teal-700 hover:underline flex items-center gap-1.5"
               >
                 <span>Simulate Doctor Scanning (Opens Portal)</span>
                 <ExternalLink size={13} />
@@ -253,17 +253,17 @@ export default function QRPage() {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-                  <span className="font-extrabold text-purple-700 text-sm">1. Scan</span>
-                  <p className="text-xs text-slate-500 mt-1">Doctor scans token from any camera.</p>
+                <div className="p-4 rounded-2xl bg-teal-50/60 border-2 border-teal-200">
+                  <span className="font-black text-teal-800 text-sm">1. Scan</span>
+                  <p className="text-xs text-slate-600 mt-1 font-medium">Doctor scans token from any camera.</p>
                 </div>
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-                  <span className="font-extrabold text-purple-700 text-sm">2. Consent</span>
-                  <p className="text-xs text-slate-500 mt-1">Patient approves for 1h, 24h, or 7d.</p>
+                <div className="p-4 rounded-2xl bg-teal-50/60 border-2 border-teal-200">
+                  <span className="font-black text-teal-800 text-sm">2. Consent</span>
+                  <p className="text-xs text-slate-600 mt-1 font-medium">Patient approves for 1h, 24h, or 7d.</p>
                 </div>
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-                  <span className="font-extrabold text-purple-700 text-sm">3. Auto Expiry</span>
-                  <p className="text-xs text-slate-500 mt-1">Access automatically locks after expiry.</p>
+                <div className="p-4 rounded-2xl bg-teal-50/60 border-2 border-teal-200">
+                  <span className="font-black text-teal-800 text-sm">3. Auto Expiry</span>
+                  <p className="text-xs text-slate-600 mt-1 font-medium">Access automatically locks after expiry.</p>
                 </div>
               </div>
             </div>
@@ -276,7 +276,7 @@ export default function QRPage() {
                 </h4>
                 <button
                   onClick={() => setActiveTab("consent")}
-                  className="text-xs font-bold text-purple-600 hover:underline"
+                  className="text-xs font-bold text-teal-700 hover:underline"
                 >
                   Manage all
                 </button>

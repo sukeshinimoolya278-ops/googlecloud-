@@ -105,16 +105,16 @@ export default function ReportsPage() {
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Medical Reports &amp; Timeline
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500">
+          <p className="text-xs sm:text-sm text-slate-600 font-medium">
             Rule-verified lab metrics, abnormal flagging, and AI multi-lingual translation
           </p>
         </div>
         <button
           onClick={() => setShowUpload(true)}
-          className="flex items-center justify-center gap-2 px-5 py-3 bg-purple-700 hover:bg-purple-800 text-white rounded-2xl text-sm font-bold shadow-md transition-all self-start sm:self-auto"
+          className="flex items-center justify-center gap-2.5 px-6 py-3.5 bg-teal-700 hover:bg-teal-800 text-white rounded-2xl text-sm sm:text-base font-black shadow-md transition-all active:scale-95 self-start sm:self-auto"
         >
-          <FileUp size={18} />
-          <span>{t("uploadReport")}</span>
+          <FileUp size={20} />
+          <span>+ {t("uploadReport")}</span>
         </button>
       </div>
 
@@ -123,10 +123,10 @@ export default function ReportsPage() {
         {/* Left Column (lg:col-span-4): Document List */}
         <div className="lg:col-span-4 space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <h2 className="text-xs font-black text-slate-600 uppercase tracking-wider">
               Timeline Records ({documents.length})
             </h2>
-            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+            <span className="text-[11px] font-black text-emerald-800 bg-emerald-100 border border-emerald-300 px-3 py-0.5 rounded-full">
               SHA-256 Verified
             </span>
           </div>
@@ -139,25 +139,25 @@ export default function ReportsPage() {
                 <button
                   key={doc.id}
                   onClick={() => handleSelectDoc(doc)}
-                  className={`p-4 rounded-2xl border text-left shrink-0 w-60 lg:w-full transition-all ${
+                  className={`p-4 rounded-2xl border-2 text-left shrink-0 w-60 lg:w-full transition-all ${
                     isSelected
-                      ? "bg-purple-50/90 border-purple-500 shadow-sm ring-1 ring-purple-400"
+                      ? "bg-teal-50 border-teal-600 shadow-sm ring-2 ring-teal-200"
                       : "bg-white border-slate-200 hover:bg-slate-50"
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <div className="p-2 rounded-xl bg-purple-100 text-purple-700">
-                      <FileText size={16} />
+                    <div className="p-2 rounded-xl bg-teal-100 text-teal-800">
+                      <FileText size={18} />
                     </div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                    <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300">
                       Confirmed
                     </span>
                   </div>
-                  <h3 className="font-bold text-xs sm:text-sm text-slate-900 truncate">
+                  <h3 className="font-black text-xs sm:text-sm text-slate-900 truncate">
                     {doc.file_name}
                   </h3>
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-500 mt-1">
-                    <Calendar size={13} />
+                  <div className="flex items-center gap-1.5 text-xs text-slate-500 font-semibold mt-1">
+                    <Calendar size={14} />
                     <span>{doc.uploaded_at?.slice(0, 10)}</span>
                   </div>
                 </button>
@@ -171,49 +171,49 @@ export default function ReportsPage() {
           {selectedDoc && docDetails ? (
             <>
               {/* Plain Language AI Explanation Card */}
-              <div className="rounded-3xl bg-purple-50/80 p-6 border border-purple-100 shadow-sm space-y-4">
+              <div className="rounded-3xl bg-teal-50 p-6 border-2 border-teal-200 shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="p-2 rounded-2xl bg-purple-600 text-white shadow-sm">
-                      <Sparkles size={18} />
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-2xl bg-teal-700 text-white shadow-sm">
+                      <Sparkles size={20} />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-slate-900 text-base">
+                      <h3 className="font-black text-slate-900 text-base sm:text-lg">
                         Plain Language Explanation
                       </h3>
-                      <p className="text-xs text-slate-500">
-                        Zero jargon • Translated for elderly and family members
+                      <p className="text-xs text-slate-600 font-medium">
+                        Zero medical jargon • Translated for elderly &amp; family members
                       </p>
                     </div>
                   </div>
 
                   <button
                     onClick={handleReadAloud}
-                    className="flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-slate-100 rounded-full border border-purple-200 text-xs font-bold text-purple-700 shadow-xs transition-all"
+                    className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-teal-100 rounded-2xl border-2 border-teal-300 text-xs sm:text-sm font-black text-teal-900 shadow-xs transition-all active:scale-95"
                   >
                     {isSpeaking ? (
                       <>
-                        <VolumeX size={15} className="text-rose-500" />
+                        <VolumeX size={16} className="text-rose-600 animate-bounce" />
                         <span>Stop</span>
                       </>
                     ) : (
                       <>
-                        <Volume2 size={15} />
-                        <span>{t("readAloud")}</span>
+                        <Volume2 size={16} className="text-teal-700" />
+                        <span>🔊 {t("readAloud")}</span>
                       </>
                     )}
                   </button>
                 </div>
 
-                <p className="text-slate-800 text-sm sm:text-base leading-relaxed font-normal">
+                <p className="text-slate-900 text-sm sm:text-base leading-relaxed font-medium">
                   {loadingExplanation
                     ? "Generating plain language translation..."
                     : explanation || "Report findings are within stable limits."}
                 </p>
 
-                <div className="pt-3 border-t border-purple-100/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-500">
+                <div className="pt-3 border-t border-teal-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-600 font-semibold">
                   <span>{t("disclaimer")}</span>
-                  <span className="text-emerald-700 font-bold flex items-center gap-1">
+                  <span className="text-emerald-800 font-black flex items-center gap-1">
                     <ShieldCheck size={16} /> Rule-Verified Lab Values
                   </span>
                 </div>
@@ -293,7 +293,7 @@ export default function ReportsPage() {
                   </div>
                   <button
                     onClick={() => setVerifyDoc(selectedDoc)}
-                    className="px-3.5 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl text-xs font-bold transition-all"
+                    className="px-4 py-2 bg-teal-50 hover:bg-teal-100 text-teal-900 border border-teal-300 rounded-xl text-xs font-black transition-all active:scale-95"
                   >
                     Edit / Re-verify
                   </button>

@@ -17,24 +17,24 @@ function HeaderBar() {
   const router = useRouter();
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 py-3">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-slate-200 px-4 sm:px-6 lg:px-8 py-3">
       <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-purple-700 flex items-center justify-center text-white shadow-md">
-            <HeartPulse size={20} />
+        {/* Medical Brand Logo */}
+        <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+          <div className="w-10 h-10 rounded-2xl bg-teal-700 flex items-center justify-center text-white shadow-md group-hover:bg-teal-800 transition-all">
+            <HeartPulse size={24} />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-slate-900 tracking-tight text-base sm:text-lg">
-                Health<span className="text-purple-700">Vault</span>
+              <span className="font-black text-slate-900 tracking-tight text-lg sm:text-xl">
+                Health<span className="text-teal-700">Vault</span>
               </span>
-              <span className="badge-pill-green text-[10px] py-0 px-2">
-                Active
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-black bg-emerald-100 text-emerald-900 border border-emerald-400">
+                + MEDICAL
               </span>
             </div>
-            <p className="text-[10px] text-slate-400 font-medium leading-none">
-              One scan away
+            <p className="text-[11px] text-slate-500 font-bold leading-none">
+              Safe &amp; Simple Health Record
             </p>
           </div>
         </Link>
@@ -43,34 +43,34 @@ function HeaderBar() {
         <DesktopNav />
 
         {/* Right Header: Profile, Settings, Login / Logout, Language Switcher */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0">
           {isAuthenticated ? (
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <Link
                 href="/settings"
-                className="flex items-center gap-1.5 py-1 px-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all border border-slate-200 shadow-2xs"
+                className="flex items-center gap-2 py-2 px-3.5 rounded-2xl bg-teal-50 hover:bg-teal-100 text-teal-900 text-xs sm:text-sm font-black transition-all border-2 border-teal-200 shadow-2xs"
                 title="Account Settings & Profile"
               >
-                <User size={13} className="text-purple-600" />
-                <span className="max-w-[100px] truncate">{profile?.full_name?.split(" ")[0] || "Profile"}</span>
-                <Settings size={12} className="text-slate-400" />
+                <User size={15} className="text-teal-700" />
+                <span className="max-w-[110px] truncate">{profile?.full_name?.split(" ")[0] || "Profile"}</span>
+                <Settings size={14} className="text-teal-600" />
               </Link>
 
               <button
                 type="button"
                 onClick={logout}
-                className="p-1.5 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
+                className="p-2 rounded-2xl text-slate-500 hover:text-rose-700 hover:bg-rose-50 border border-slate-200 transition-all"
                 title="Log Out"
               >
-                <LogOut size={16} />
+                <LogOut size={18} />
               </button>
             </div>
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-purple-700 hover:bg-purple-800 text-white text-xs font-extrabold transition-all shadow-xs"
+              className="flex items-center gap-2 py-2 px-4 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white text-xs sm:text-sm font-black transition-all shadow-sm"
             >
-              <LogIn size={13} />
+              <LogIn size={15} />
               <span>Sign In</span>
             </Link>
           )}

@@ -63,7 +63,7 @@ export function LoginModal({ onClose }: LoginModalProps) {
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl border border-slate-200 overflow-hidden">
         {/* Header */}
-        <div className="p-6 bg-purple-700 text-white relative">
+        <div className="p-6 bg-teal-800 text-white relative">
           {onClose && (
             <button
               onClick={onClose}
@@ -114,7 +114,7 @@ export function LoginModal({ onClose }: LoginModalProps) {
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 font-bold text-slate-800 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 font-bold text-slate-800 focus:ring-2 focus:ring-teal-400 focus:outline-none"
                   />
                 </div>
               </div>
@@ -140,7 +140,7 @@ export function LoginModal({ onClose }: LoginModalProps) {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
                   placeholder="123456"
-                  className="w-full py-3 px-4 text-center tracking-widest text-2xl font-black rounded-xl border border-purple-400 bg-purple-50/50 text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                  className="w-full py-3 px-4 text-center tracking-widest text-2xl font-black rounded-xl border border-teal-400 bg-teal-50/50 text-slate-900 focus:ring-2 focus:ring-teal-500 focus:outline-none"
                 />
               </div>
 

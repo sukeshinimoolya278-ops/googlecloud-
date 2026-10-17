@@ -105,54 +105,54 @@ export default function MedicinesPage() {
           {activeMeds.map((med) => (
             <div
               key={med.id}
-              className="card-aesthetic p-5 flex flex-col justify-between relative overflow-hidden"
+              className="card-aesthetic p-6 flex flex-col justify-between relative overflow-hidden border-2 border-slate-200 hover:border-teal-500 shadow-sm transition-all"
             >
               <div>
                 <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-start gap-3">
-                    <div className="w-11 h-11 rounded-2xl bg-purple-700 text-white flex items-center justify-center shadow-sm shrink-0">
-                      <Pill size={22} />
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-teal-700 text-white flex items-center justify-center shadow-sm shrink-0">
+                      <Pill size={24} />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-slate-900 text-base">
+                      <h3 className="font-black text-slate-900 text-base sm:text-lg">
                         {med.name}
                       </h3>
-                      <div className="flex flex-wrap items-center gap-1.5 mt-1">
-                        <span className="text-xs font-bold text-purple-700 bg-purple-100 px-2.5 py-0.5 rounded-md">
+                      <div className="flex flex-wrap items-center gap-2 mt-1">
+                        <span className="text-xs font-black text-teal-900 bg-teal-100 px-3 py-1 rounded-lg border border-teal-300">
                           {med.dose}
                         </span>
-                        <span className="text-xs font-medium text-slate-600">
+                        <span className="text-xs font-bold text-slate-700">
                           {med.frequency}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Read Aloud Button */}
+                  {/* Large Read Aloud Voice Button for Elderly */}
                   <button
                     onClick={() => handleReadMedicine(med)}
-                    className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all shadow-2xs shrink-0"
-                    title={t("readAloud")}
+                    className="p-3 bg-teal-50 hover:bg-teal-100 border-2 border-teal-200 text-teal-900 rounded-2xl transition-all shadow-2xs shrink-0 active:scale-95"
+                    title="Tap to listen to dose instructions"
                   >
                     {playingId === med.id && isSpeaking ? (
-                      <VolumeX size={18} className="text-rose-500" />
+                      <VolumeX size={20} className="text-rose-600 animate-bounce" />
                     ) : (
-                      <Volume2 size={18} className="text-purple-600" />
+                      <Volume2 size={20} className="text-teal-800" />
                     )}
                   </button>
                 </div>
 
-                <p className="text-xs text-slate-600 mt-3 pt-3 border-t border-slate-100 leading-relaxed">
+                <div className="mt-4 p-3 bg-slate-50 rounded-2xl border border-slate-200 text-xs sm:text-sm text-slate-800 leading-relaxed">
                   <strong>Instructions:</strong> {med.instructions || "Take with water after meals"}
-                </p>
+                </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="text-slate-400 flex items-center gap-1">
-                  <Clock size={13} />
+              <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs sm:text-sm">
+                <span className="text-slate-600 font-semibold flex items-center gap-1.5">
+                  <Clock size={15} className="text-slate-400" />
                   Until {med.end_date}
                 </span>
-                <span className="font-extrabold text-emerald-800 bg-emerald-100/70 border border-emerald-200 px-3 py-1 rounded-full text-xs">
+                <span className="font-black text-emerald-900 bg-emerald-100 border border-emerald-400 px-3.5 py-1 rounded-full text-xs">
                   {med.days_left} {t("daysLeft")}
                 </span>
               </div>

@@ -104,7 +104,7 @@ Rx:
         {/* Header */}
         <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-purple-700 flex items-center justify-center text-white shadow-md">
+            <div className="w-10 h-10 rounded-2xl bg-teal-700 flex items-center justify-center text-white shadow-md">
               <FileUp size={22} />
             </div>
             <div>
@@ -130,22 +130,22 @@ Rx:
           )}
 
           {/* Quick Demo Samples (For effortless 5-second hackathon live test) */}
-          <div className="p-3.5 bg-purple-50/70 rounded-2xl border border-purple-200/80">
-            <span className="block text-xs font-extrabold text-purple-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <Sparkles size={14} className="text-purple-600" /> Quick Demo Test (One-Click)
+          <div className="p-3.5 bg-teal-50 rounded-2xl border border-teal-200">
+            <span className="block text-xs font-black text-teal-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <Sparkles size={14} className="text-teal-700" /> Quick Demo Test (One-Click)
             </span>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => handleLoadSample("lab")}
-                className="p-2.5 rounded-xl border border-purple-300 bg-white hover:bg-purple-100/50 text-left text-xs font-bold text-purple-950 transition-all shadow-xs"
+                className="p-2.5 rounded-xl border border-teal-300 bg-white hover:bg-teal-100/50 text-left text-xs font-black text-teal-950 transition-all shadow-xs"
               >
                 🧪 Sample Lab Report
               </button>
               <button
                 type="button"
                 onClick={() => handleLoadSample("rx")}
-                className="p-2.5 rounded-xl border border-purple-300 bg-white hover:bg-purple-100/50 text-left text-xs font-bold text-purple-950 transition-all shadow-xs"
+                className="p-2.5 rounded-xl border border-teal-300 bg-white hover:bg-teal-100/50 text-left text-xs font-black text-teal-950 transition-all shadow-xs"
               >
                 💊 Sample Prescription
               </button>
@@ -168,9 +168,9 @@ Rx:
                   type="button"
                   key={item.id}
                   onClick={() => setDocType(item.id)}
-                  className={`flex items-center gap-2.5 p-3 rounded-2xl border text-sm font-semibold transition-all ${
+                  className={`flex items-center gap-2.5 p-3 rounded-2xl border-2 text-sm font-semibold transition-all ${
                     docType === item.id
-                      ? "border-purple-600 bg-purple-50 text-purple-950 ring-2 ring-purple-500/20 shadow-sm"
+                      ? "border-teal-600 bg-teal-50 text-teal-950 shadow-sm"
                       : "border-slate-200 text-slate-600 hover:bg-slate-50"
                   }`}
                 >
@@ -185,9 +185,9 @@ Rx:
           <div>
             <label
               htmlFor="file-upload"
-              className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 hover:border-purple-400 rounded-2xl p-5 bg-slate-50 hover:bg-purple-50/30 cursor-pointer transition-all text-center"
+              className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 hover:border-teal-400 rounded-2xl p-5 bg-slate-50 hover:bg-teal-50/30 cursor-pointer transition-all text-center"
             >
-              <div className="w-11 h-11 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mb-2 shadow-inner">
+              <div className="w-11 h-11 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 mb-2 shadow-inner">
                 {file ? <FileText size={22} /> : <Camera size={22} />}
               </div>
               <p className="text-sm font-bold text-slate-800">

@@ -4,7 +4,7 @@
 
 :root {
   --foreground-rgb: 15, 23, 42;
-  --background-rgb: 250, 250, 252;
+  --background-rgb: 248, 250, 252;
 }
 
 body {
@@ -15,46 +15,58 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom UI Pill Badges from Design Inspiration */
+/* Medical Field Badges (High Contrast, Easily Read by Elderly & Children) */
+.badge-pill-medical {
+  @apply inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-extrabold bg-teal-800 text-white shadow-xs;
+}
+
 .badge-pill-indigo {
-  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-600 text-white shadow-sm;
+  @apply inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-extrabold bg-teal-800 text-white shadow-xs;
 }
 
 .badge-pill-magenta {
-  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-fuchsia-600 text-white shadow-sm;
+  @apply inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-extrabold bg-rose-700 text-white shadow-xs;
 }
 
 .badge-pill-green {
-  @apply inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold text-emerald-600 border-2 border-emerald-500 bg-emerald-50/70;
+  @apply inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-extrabold text-emerald-800 border-2 border-emerald-600 bg-emerald-50;
 }
 
-/* Interactive Card Styling */
+/* Hospital Clinical Card Styling */
 .card-aesthetic {
-  @apply bg-white rounded-2xl border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] transition-all hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)];
+  @apply bg-white rounded-3xl border-2 border-slate-200/90 shadow-[0_4px_16px_rgba(15,23,42,0.04)] transition-all hover:border-teal-500 hover:shadow-md;
 }
 
-/* High Contrast Abnormal Badges */
+.card-medical {
+  @apply bg-white rounded-3xl border-2 border-slate-200 shadow-[0_4px_16px_rgba(15,23,42,0.04)] transition-all hover:border-teal-600;
+}
+
+/* High Contrast Medical Abnormal Badges */
 .badge-normal {
-  @apply bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 px-2.5 py-0.5 rounded-full text-xs;
+  @apply bg-emerald-100 text-emerald-900 font-black border-2 border-emerald-400 px-3 py-1 rounded-full text-xs sm:text-sm;
 }
 
 .badge-high {
-  @apply bg-amber-100 text-amber-900 font-bold border border-amber-300 px-2.5 py-0.5 rounded-full text-xs;
+  @apply bg-amber-100 text-amber-950 font-black border-2 border-amber-400 px-3 py-1 rounded-full text-xs sm:text-sm;
 }
 
 .badge-critical {
-  @apply bg-rose-100 text-rose-800 font-bold border border-rose-300 px-2.5 py-0.5 rounded-full text-xs animate-pulse;
+  @apply bg-rose-100 text-rose-900 font-black border-2 border-rose-400 px-3 py-1 rounded-full text-xs sm:text-sm;
 }
 
 .badge-low {
-  @apply bg-blue-100 text-blue-900 font-bold border border-blue-300 px-2.5 py-0.5 rounded-full text-xs;
+  @apply bg-sky-100 text-sky-950 font-black border-2 border-sky-400 px-3 py-1 rounded-full text-xs sm:text-sm;
 }
 
-/* Big Tap Targets */
+/* Big Touch Targets for Seniors and Children (Minimum 50px height) */
 .btn-primary {
-  @apply w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-lg text-white bg-purple-700 hover:bg-purple-800 shadow-md active:scale-[0.98] transition-all;
+  @apply w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl font-black text-lg text-white bg-teal-700 hover:bg-teal-800 shadow-md active:scale-[0.98] transition-all;
 }
 
 .btn-secondary {
-  @apply w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-lg text-slate-800 bg-slate-100 hover:bg-slate-200 active:scale-[0.98] transition-all;
+  @apply w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl font-black text-lg text-slate-800 bg-slate-100 hover:bg-slate-200 border-2 border-slate-200 active:scale-[0.98] transition-all;
+}
+
+.btn-emergency {
+  @apply w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl font-black text-lg text-white bg-rose-700 hover:bg-rose-800 shadow-md active:scale-[0.98] transition-all;
 }

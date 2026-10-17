@@ -68,7 +68,7 @@ export function ProfileEditModal({ onClose }: ProfileEditModalProps) {
         {/* Header */}
         <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center shadow-md">
+            <div className="w-10 h-10 rounded-2xl bg-teal-700 text-white flex items-center justify-center shadow-md">
               <User size={20} />
             </div>
             <div>
@@ -95,7 +95,7 @@ export function ProfileEditModal({ onClose }: ProfileEditModalProps) {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-slate-200 font-semibold text-slate-800 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+                className="w-full p-2.5 rounded-xl border border-slate-200 font-semibold text-slate-800 focus:ring-2 focus:ring-teal-400 focus:outline-none"
               />
             </div>
             <div>
@@ -105,7 +105,7 @@ export function ProfileEditModal({ onClose }: ProfileEditModalProps) {
                 required
                 value={age}
                 onChange={(e) => setAge(Number(e.target.value))}
-                className="w-full p-2.5 rounded-xl border border-slate-200 font-semibold text-slate-800 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+                className="w-full p-2.5 rounded-xl border border-slate-200 font-semibold text-slate-800 focus:ring-2 focus:ring-teal-400 focus:outline-none"
               />
             </div>
           </div>
@@ -117,7 +117,7 @@ export function ProfileEditModal({ onClose }: ProfileEditModalProps) {
               <select
                 value={bloodGroup}
                 onChange={(e) => setBloodGroup(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-slate-200 font-bold text-rose-700 focus:ring-2 focus:ring-purple-400 focus:outline-none bg-white"
+                className="w-full p-2.5 rounded-xl border border-slate-200 font-bold text-rose-700 focus:ring-2 focus:ring-teal-400 focus:outline-none bg-white"
               >
                 {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((bg) => (
                   <option key={bg} value={bg}>{bg}</option>
@@ -129,7 +129,7 @@ export function ProfileEditModal({ onClose }: ProfileEditModalProps) {
               <select
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-slate-200 font-medium text-slate-800 focus:ring-2 focus:ring-purple-400 focus:outline-none bg-white"
+                className="w-full p-2.5 rounded-xl border border-slate-200 font-medium text-slate-800 focus:ring-2 focus:ring-teal-400 focus:outline-none bg-white"
               >
                 {["Male", "Female", "Other", "Prefer not to say"].map((g) => (
                   <option key={g} value={g}>{g}</option>
@@ -162,7 +162,7 @@ export function ProfileEditModal({ onClose }: ProfileEditModalProps) {
               value={conditionsText}
               onChange={(e) => setConditionsText(e.target.value)}
               placeholder="e.g. Type 2 Diabetes, Hypertension"
-              className="w-full p-2.5 rounded-xl border border-slate-200 font-medium text-slate-800 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-200 font-medium text-slate-800 focus:ring-2 focus:ring-teal-400 focus:outline-none"
             />
           </div>
 
