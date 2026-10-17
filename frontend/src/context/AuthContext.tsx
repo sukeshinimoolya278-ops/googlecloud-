@@ -30,10 +30,10 @@ interface AuthContextType {
   verifyPhoneOtp: (confirmationResult: ConfirmationResult, otp: string) => Promise<boolean>;
   sendOtp: (phone: string) => Promise<{ status: string; demo_hint?: string }>;
   verifyOtp: (phone: string, otp: string) => Promise<boolean>;
-  loginWithGoogle: () => Promise<boolean>;
+  loginWithGoogle: (emailOverride?: string) => Promise<boolean>;
   loginAsDemo: () => Promise<void>;
   // Account linking
-  linkGoogleAccount: () => Promise<{ success: boolean; error?: string }>;
+  linkGoogleAccount: (emailOverride?: string) => Promise<{ success: boolean; error?: string }>;
   linkPhoneNumber: (phoneNumber: string, appVerifier?: any) => Promise<ConfirmationResult>;
   confirmPhoneLink: (confirmationResult: ConfirmationResult, otp: string) => Promise<{ success: boolean; error?: string }>;
   // Profile & settings
@@ -208,34 +208,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Google Login Flow
-  const loginWithGoogle = async (): Promise<boolean> => {
-    try {
-      if (isFirebaseConfigured()) {
-        const result = await signInWithPopup(auth, googleProvider);
-        const user = result.user;
-        setFirebaseUser(user);
-        const idToken = await user.getIdToken();
-        setToken(idToken);
-        localStorage.setItem("qr_health_token", idToken);
-        await syncWithBackend(idToken, {
-          email: user.email,
-          name: user.displayName,
-          phone: user.phoneNumber,
-        });
-        return true;
-      }
-
-      // Demo fallback Google login
-      const demoToken = "demo_jwt_token_123456";
+  const loginWithGoogle = async (emailOverride?: string): Promise<boolean> => {
+    // If user provided a specific Gmail address
+    if (emailOverride && emailOverride.trim()) {
+      const email = emailOverride.trim().toLowerCase();
+      const rawName = email.split("@")[0].replace(/[._-]/g, " ");
+      const name = rawName.replace(/\b\w/g, (l) => l.toUpperCase());
+      const demoToken = `token_gmail_${Date.now()}`;
       setToken(demoToken);
       localStorage.setItem("qr_health_token", demoToken);
       await syncWithBackend(demoToken, {
-        email: "ramesh.sharma@gmail.com",
-        name: "Ramesh Sharma",
+        email,
+        name: name || "Google User",
+      });
+      return true;
+    }
+
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      setFirebaseUser(user);
+      const idToken = await user.getIdToken();
+      setToken(idToken);
+      localStorage.setItem("qr_health_token", idToken);
+      await syncWithBackend(idToken, {
+        email: user.email,
+        name: user.displayName,
+        phone: user.phoneNumber,
       });
       return true;
     } catch (err: any) {
-      console.error("Google sign-in error:", err.code || err.message);
+      console.warn("Google popup notice:", err.code || err.message);
       throw err;
     }
   };
@@ -253,9 +256,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Link Google Account to existing user
-  const linkGoogleAccount = async (): Promise<{ success: boolean; error?: string }> => {
+  const linkGoogleAccount = async (emailOverride?: string): Promise<{ success: boolean; error?: string }> => {
+    if (emailOverride && emailOverride.trim()) {
+      const email = emailOverride.trim().toLowerCase();
+      const currentToken = token || localStorage.getItem("qr_health_token") || "demo_jwt_token_123456";
+      await syncWithBackend(currentToken, { email });
+      return { success: true };
+    }
+
     if (!auth.currentUser) {
-      return { success: false, error: "No active user session found to link." };
+      return { success: false, error: "No active Firebase session. Please enter your Gmail address." };
     }
     try {
       await linkWithPopup(auth.currentUser, googleProvider);
@@ -266,7 +276,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (err.code === "auth/credential-already-in-use") {
         return {
           success: false,
-          error: "This Google account is already linked to another Health Vault profile. Please use a different Gmail or sign in directly with Google.",
+          error: "This Google account is already linked to another Health Vault profile.",
         };
       }
       return { success: false, error: err.message || "Failed to link Google account." };

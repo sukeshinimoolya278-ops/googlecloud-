@@ -74,6 +74,8 @@ export default function SettingsPage() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [linkingGoogle, setLinkingGoogle] = useState(false);
+  const [showLinkGmailModal, setShowLinkGmailModal] = useState(false);
+  const [linkGmailAddress, setLinkGmailAddress] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -219,11 +221,35 @@ export default function SettingsPage() {
   const handleLinkGoogle = async () => {
     setLinkingGoogle(true);
     setErrorMessage(null);
-    const res = await linkGoogleAccount();
+    try {
+      const res = await linkGoogleAccount();
+      setLinkingGoogle(false);
+      if (res.error) {
+        setErrorMessage(res.error);
+      } else {
+        setShowLinkGmailModal(false);
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 3000);
+      }
+    } catch {
+      setLinkingGoogle(false);
+    }
+  };
+
+  const handleConfirmLinkGmail = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!linkGmailAddress || !linkGmailAddress.includes("@")) {
+      setErrorMessage("Please enter a valid Gmail address (e.g. anivesh@gmail.com).");
+      return;
+    }
+    setLinkingGoogle(true);
+    setErrorMessage(null);
+    const res = await linkGoogleAccount(linkGmailAddress.trim());
     setLinkingGoogle(false);
     if (res.error) {
       setErrorMessage(res.error);
     } else {
+      setShowLinkGmailModal(false);
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     }
@@ -521,11 +547,9 @@ export default function SettingsPage() {
             ) : (
               <button
                 type="button"
-                onClick={handleLinkGoogle}
-                disabled={linkingGoogle}
+                onClick={() => setShowLinkGmailModal(true)}
                 className="py-2 px-4 rounded-xl text-xs font-bold bg-white hover:bg-slate-100 border-2 border-slate-300 text-slate-800 transition-all self-start sm:self-center flex items-center gap-1.5"
               >
-                {linkingGoogle && <RefreshCw size={12} className="animate-spin" />}
                 <span>Link Google Account</span>
               </button>
             )}
@@ -833,6 +857,74 @@ export default function SettingsPage() {
                 <span>Delete Permanently</span>
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Link Gmail Modal */}
+      {showLinkGmailModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5">
+            <div className="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center text-purple-700 mx-auto">
+              <Mail size={30} />
+            </div>
+
+            <div className="text-center">
+              <h3 className="text-xl font-black text-slate-900 tracking-tight">Link Your Google Account</h3>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                Choose an account via Google popup or enter your Gmail address.
+              </p>
+            </div>
+
+            {/* Option 1: Popup */}
+            <button
+              type="button"
+              onClick={handleLinkGoogle}
+              disabled={linkingGoogle}
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl border-2 border-slate-300 hover:border-purple-600 bg-white font-bold text-sm text-slate-800 shadow-2xs"
+            >
+              {linkingGoogle ? <RefreshCw size={16} className="animate-spin" /> : <Mail size={16} />}
+              <span>Choose Account (Google Popup)</span>
+            </button>
+
+            <div className="flex items-center gap-3">
+              <div className="h-px bg-slate-200 flex-1"></div>
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">or type gmail</span>
+              <div className="h-px bg-slate-200 flex-1"></div>
+            </div>
+
+            {/* Option 2: Type Gmail */}
+            <form onSubmit={handleConfirmLinkGmail} className="space-y-4">
+              <div>
+                <input
+                  type="email"
+                  autoFocus
+                  required
+                  value={linkGmailAddress}
+                  onChange={(e) => setLinkGmailAddress(e.target.value)}
+                  placeholder="e.g. yourname@gmail.com"
+                  className="w-full text-base font-semibold px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-purple-600 outline-none"
+                />
+              </div>
+
+              <div className="flex items-center gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowLinkGmailModal(false)}
+                  className="flex-1 py-3 px-4 rounded-xl border border-slate-200 text-slate-700 font-bold text-sm hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={linkingGoogle || !linkGmailAddress.includes("@")}
+                  className="flex-1 py-3 px-4 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-sm disabled:opacity-50 transition-all flex items-center justify-center gap-1.5"
+                >
+                  {linkingGoogle && <RefreshCw size={14} className="animate-spin" />}
+                  <span>Link Gmail</span>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -5,7 +5,17 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import { RecaptchaVerifier, ConfirmationResult } from "firebase/auth";
 import { auth, isFirebaseConfigured } from "../../lib/firebase";
-import { Phone, ArrowRight, ShieldCheck, HeartPulse, RefreshCw, AlertCircle, Sparkles, CheckCircle2 } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  ArrowRight,
+  ShieldCheck,
+  HeartPulse,
+  RefreshCw,
+  AlertCircle,
+  Sparkles,
+  CheckCircle2,
+} from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,14 +28,17 @@ export default function LoginPage() {
     isFirebaseReady,
   } = useAuth();
 
-  // Screen modes: 'SELECT_METHOD' | 'PHONE_INPUT' | 'OTP_INPUT'
-  const [mode, setMode] = useState<"SELECT_METHOD" | "PHONE_INPUT" | "OTP_INPUT">("SELECT_METHOD");
+  // Screen modes: 'SELECT_METHOD' | 'PHONE_INPUT' | 'OTP_INPUT' | 'GMAIL_INPUT'
+  const [mode, setMode] = useState<"SELECT_METHOD" | "PHONE_INPUT" | "OTP_INPUT" | "GMAIL_INPUT">("SELECT_METHOD");
 
   // Phone state
   const [countryCode, setCountryCode] = useState("+91");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+
+  // Gmail state
+  const [gmailAddress, setGmailAddress] = useState("");
 
   // Status & Timers
   const [loading, setLoading] = useState(false);
@@ -77,9 +90,7 @@ export default function LoginPage() {
       try {
         recaptchaVerifierRef.current = new RecaptchaVerifier(auth, "recaptcha-container", {
           size: "invisible",
-          callback: () => {
-            // reCAPTCHA solved
-          },
+          callback: () => {},
           "expired-callback": () => {
             setError("reCAPTCHA expired. Please try sending OTP again.");
           },
@@ -91,7 +102,7 @@ export default function LoginPage() {
     return recaptchaVerifierRef.current;
   };
 
-  // 1. Send OTP
+  // 1. Send Phone OTP
   const handleSendOtp = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setError(null);
@@ -132,7 +143,7 @@ export default function LoginPage() {
     }
   };
 
-  // 2. Resend OTP
+  // 2. Resend Phone OTP
   const handleResendOtp = async () => {
     if (!canResend || loading) return;
     setError(null);
@@ -141,7 +152,7 @@ export default function LoginPage() {
     await handleSendOtp();
   };
 
-  // 3. Verify OTP
+  // 3. Verify Phone OTP
   const handleVerifyOtp = async (codeToVerify?: string) => {
     const fullCode = codeToVerify || otp.join("");
     if (fullCode.length !== 6) {
@@ -184,7 +195,6 @@ export default function LoginPage() {
 
     const newOtp = [...otp];
     if (clean.length > 1) {
-      // Pasted full code
       const pasted = clean.slice(0, 6).split("");
       pasted.forEach((char, i) => {
         newOtp[i] = char;
@@ -216,22 +226,43 @@ export default function LoginPage() {
     }
   };
 
-  // Google Sign-In
-  const handleGoogleLogin = async () => {
+  // Google Sign-In via Popup
+  const handleGooglePopup = async () => {
     setLoading(true);
     setError(null);
     try {
       await loginWithGoogle();
       router.push("/");
     } catch (err: any) {
-      console.error("Google sign-in error", err);
+      console.warn("Google popup error:", err.code || err.message);
       if (err.code === "auth/popup-closed-by-user") {
-        setError("Sign-in cancelled. Please try again.");
+        setError("Popup window was closed. You can also enter your Gmail address directly below.");
       } else if (err.code === "auth/popup-blocked") {
-        setError("Popup was blocked by your browser. Please allow popups for this site.");
+        setError("Popup was blocked by your browser. Please enter your Gmail address below.");
       } else {
-        setError(err.message || "Unable to sign in with Google.");
+        setError("Please enter your Gmail address directly below to continue.");
       }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Google Sign-In via Entered Gmail Address
+  const handleGmailSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const cleanEmail = gmailAddress.trim();
+    if (!cleanEmail || !cleanEmail.includes("@")) {
+      setError("Please enter a valid Gmail address (e.g. anivesh@gmail.com).");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      await loginWithGoogle(cleanEmail);
+      router.push("/");
+    } catch (err: any) {
+      setError(err.message || "Failed to sign in with this Gmail.");
     } finally {
       setLoading(false);
     }
@@ -279,7 +310,7 @@ export default function LoginPage() {
                 Sign In to Your Vault
               </h2>
               <p className="text-slate-500 text-sm mt-1">
-                Choose your preferred way to continue
+                Choose how you want to sign in
               </p>
             </div>
 
@@ -304,12 +335,14 @@ export default function LoginPage() {
               <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
             </button>
 
-            {/* Large Button: Continue with Google */}
+            {/* Large Button: Continue with Google / Gmail */}
             <button
               type="button"
-              onClick={handleGoogleLogin}
-              disabled={loading}
-              className="w-full group flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 border-slate-200 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-lg sm:text-xl transition-all shadow-sm active:scale-[0.98]"
+              onClick={() => {
+                setError(null);
+                setMode("GMAIL_INPUT");
+              }}
+              className="w-full group flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 border-slate-300 hover:border-purple-600 bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-lg sm:text-xl transition-all shadow-sm active:scale-[0.98]"
             >
               <div className="flex items-center gap-3.5">
                 <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center">
@@ -335,10 +368,10 @@ export default function LoginPage() {
                 </div>
                 <div className="text-left">
                   <div className="leading-tight">Continue with Google</div>
-                  <div className="text-xs text-slate-500 font-medium mt-0.5">Use your Gmail account</div>
+                  <div className="text-xs text-slate-500 font-medium mt-0.5">Choose or enter your Gmail</div>
                 </div>
               </div>
-              <ArrowRight size={22} className="text-slate-400 group-hover:translate-x-1 group-hover:text-slate-700 transition-all" />
+              <ArrowRight size={22} className="text-slate-400 group-hover:translate-x-1 group-hover:text-purple-600 transition-all" />
             </button>
 
             {/* Quick Demo Reviewer Button */}
@@ -356,7 +389,116 @@ export default function LoginPage() {
         )}
 
         {/* ============================================================ */}
-        {/* VIEW 2: PHONE NUMBER ENTRY (Clean, 360px Tested)              */}
+        {/* VIEW 2: GMAIL / GOOGLE ACCOUNT SELECTION                      */}
+        {/* ============================================================ */}
+        {mode === "GMAIL_INPUT" && (
+          <div className="p-6 sm:p-8 space-y-6">
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setError(null);
+                  setMode("SELECT_METHOD");
+                }}
+                className="text-xs font-bold text-purple-600 hover:text-purple-800 mb-2 inline-flex items-center gap-1"
+              >
+                ← Back to sign-in options
+              </button>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+                <Mail size={24} className="text-purple-700" />
+                <span>Sign In with Gmail</span>
+              </h2>
+              <p className="text-slate-500 text-sm mt-1">
+                Choose an account via Google popup or type your Gmail address.
+              </p>
+            </div>
+
+            {/* Option A: Open Google Account Picker Popup */}
+            <div>
+              <button
+                type="button"
+                onClick={handleGooglePopup}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl border-2 border-slate-300 hover:border-purple-600 bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-base transition-all shadow-xs"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                </svg>
+                <span>Choose Account (Google Popup)</span>
+              </button>
+            </div>
+
+            {/* Visual Divider */}
+            <div className="flex items-center gap-3">
+              <div className="h-px bg-slate-200 flex-1"></div>
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">or enter your gmail</span>
+              <div className="h-px bg-slate-200 flex-1"></div>
+            </div>
+
+            {/* Option B: Enter Gmail Address Form */}
+            <form onSubmit={handleGmailSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Your Gmail Address
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    autoFocus
+                    required
+                    value={gmailAddress}
+                    onChange={(e) => setGmailAddress(e.target.value)}
+                    placeholder="e.g. yourname@gmail.com"
+                    className="w-full text-base sm:text-lg font-semibold px-4 py-3.5 rounded-2xl border-2 border-slate-200 focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Quick Preset Buttons */}
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-semibold text-slate-500">Quick add:</span>
+                {["@gmail.com", "@googlemail.com"].map((suffix) => (
+                  <button
+                    key={suffix}
+                    type="button"
+                    onClick={() => {
+                      if (!gmailAddress.includes("@")) {
+                        setGmailAddress((prev) => prev + suffix);
+                      }
+                    }}
+                    className="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all border border-slate-200"
+                  >
+                    {suffix}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading || !gmailAddress.includes("@")}
+                className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-lg shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
+              >
+                {loading ? (
+                  <>
+                    <RefreshCw size={20} className="animate-spin" />
+                    <span>Signing In...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Continue with this Gmail</span>
+                    <ArrowRight size={20} />
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* ============================================================ */}
+        {/* VIEW 3: PHONE NUMBER ENTRY (Clean, 360px Tested)              */}
         {/* ============================================================ */}
         {mode === "PHONE_INPUT" && (
           <form onSubmit={handleSendOtp} className="p-6 sm:p-8 space-y-6">
@@ -432,7 +574,7 @@ export default function LoginPage() {
         )}
 
         {/* ============================================================ */}
-        {/* VIEW 3: 6-DIGIT OTP ENTRY WITH 30s RESEND TIMER               */}
+        {/* VIEW 4: 6-DIGIT OTP ENTRY WITH 30s RESEND TIMER               */}
         {/* ============================================================ */}
         {mode === "OTP_INPUT" && (
           <div className="p-6 sm:p-8 space-y-6">

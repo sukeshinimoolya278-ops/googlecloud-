@@ -6,20 +6,24 @@ export async function POST(request: Request) {
     const authHeader = request.headers.get("authorization") || "";
     const body = await request.json().catch(() => ({}));
 
-    // If phone or email provided in body or claims, update verified methods
-    if (body.phone && !demoStore.profile.phone) {
-      demoStore.profile.phone = body.phone;
-      if (!demoStore.profile.verified_methods?.includes("phone")) {
-        demoStore.profile.verified_methods = [...(demoStore.profile.verified_methods || []), "phone"];
-      }
-    }
-    if (body.email && !demoStore.profile.email) {
+    // Update email and verified methods
+    if (body.email) {
       demoStore.profile.email = body.email;
       if (!demoStore.profile.verified_methods?.includes("google")) {
         demoStore.profile.verified_methods = [...(demoStore.profile.verified_methods || []), "google"];
       }
     }
-    if (body.name && (!demoStore.profile.full_name || demoStore.profile.full_name === "New Patient")) {
+
+    // Update phone and verified methods
+    if (body.phone) {
+      demoStore.profile.phone = body.phone;
+      if (!demoStore.profile.verified_methods?.includes("phone")) {
+        demoStore.profile.verified_methods = [...(demoStore.profile.verified_methods || []), "phone"];
+      }
+    }
+
+    // Update name if provided
+    if (body.name) {
       demoStore.profile.full_name = body.name;
     }
 
