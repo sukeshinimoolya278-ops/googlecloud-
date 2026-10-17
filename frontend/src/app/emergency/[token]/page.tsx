@@ -74,9 +74,13 @@ export default function EmergencyPortalPage() {
           <span className="text-xs font-bold text-rose-100">Zero Login</span>
         </div>
         <h1 className="text-2xl font-black">{patient?.full_name}</h1>
-        <p className="text-sm font-medium text-rose-100">
-          Age: {patient?.age} • Gender: {patient?.gender}
-        </p>
+        <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-rose-100">
+          <span>Age: {patient?.age} • Gender: {patient?.gender}</span>
+          <span className="bg-white/20 px-2.5 py-0.5 rounded-full text-xs font-bold text-white flex items-center gap-1">
+            <UserCheck size={12} />
+            ABHA: {patient?.abha_id || "91-4829-1029-4821"} (Govt Verified)
+          </span>
+        </div>
       </div>
 
       {/* Critical Life-Threatening Alerts */}

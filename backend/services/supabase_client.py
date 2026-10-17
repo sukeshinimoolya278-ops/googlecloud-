@@ -39,7 +39,11 @@ class HealthVaultDB:
             "allergies": ["Penicillin", "Sulfa drugs"],
             "chronic_conditions": ["Type 2 Diabetes Mellitus", "Hypertension"],
             "preferred_language": "hi",
-            "created_at": (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=180)).isoformat()
+            "created_at": (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=180)).isoformat(),
+            "abha_id": "91-4829-1029-4821",
+            "abha_address": "ramesh.sharma@abdm",
+            "identity_status": "VERIFIED_GOVT_ID",
+            "verified_via": "Aadhaar e-KYC & ABDM Registry"
         }
 
         self.emergency_contacts[DEMO_PATIENT_ID] = [

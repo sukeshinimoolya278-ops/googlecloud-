@@ -20,6 +20,34 @@ export interface Profile {
   chronic_conditions: string[];
   preferred_language: string;
   created_at: string;
+  abha_id?: string;
+  abha_address?: string;
+  identity_status?: string;
+  verified_via?: string;
+}
+
+export interface ClinicalDocument {
+  id: string;
+  patient_id: string;
+  type: string;
+  file_name: string;
+  status: string;
+  uploaded_at: string;
+  issuing_entity?: string;
+  accreditation?: string;
+  lab_license?: string;
+  patient_match_score?: string;
+  authenticity_status?: string;
+  cryptographic_hash?: string;
+  digital_signature?: string;
+  tests?: {
+    name: string;
+    value: number;
+    unit: string;
+    normal_min?: number;
+    normal_max?: number;
+    flag?: string;
+  }[];
 }
 
 export const DEMO_PATIENT_ID = "00000000-0000-0000-0000-000000000001";
@@ -38,6 +66,10 @@ export const demoStore = {
     chronic_conditions: ["Type 2 Diabetes Mellitus", "Hypertension"],
     preferred_language: "hi",
     created_at: new Date(Date.now() - 180 * 86400000).toISOString(),
+    abha_id: "91-4829-1029-4821",
+    abha_address: "ramesh.sharma@abdm",
+    identity_status: "VERIFIED_GOVT_ID",
+    verified_via: "Aadhaar e-KYC & ABDM Registry",
   } as Profile,
 
   emergencyContacts: [
@@ -165,6 +197,13 @@ export const demoStore = {
       file_name: "Metropolis_HBA1C_Apr2026.pdf",
       status: "ready",
       uploaded_at: new Date(Date.now() - 180 * 86400000).toISOString(),
+      issuing_entity: "Metropolis Healthcare Ltd.",
+      accreditation: "NABL Accredited (Cert #MC-2491) & CAP Certified",
+      lab_license: "DL-MET-2024-9981",
+      patient_match_score: "99.8% (Matched with ABHA 91-4829-1029-4821)",
+      authenticity_status: "OFFICIAL_VERIFIED",
+      cryptographic_hash: "sha256_e7f86dda8f744fbbaff20ddf2c94892e",
+      digital_signature: "Digitally Signed by Dr. K. Ramanathan, MD (Pathology)",
       tests: [
         { name: "Fasting Blood Sugar", value: 188.0, unit: "mg/dL", normal_min: 70, normal_max: 99, flag: "high" },
         { name: "HbA1c", value: 8.8, unit: "%", normal_min: 4.0, normal_max: 5.6, flag: "high" },
@@ -179,6 +218,13 @@ export const demoStore = {
       file_name: "Apollo_Lipid_Sugar_Jul2026.pdf",
       status: "ready",
       uploaded_at: new Date(Date.now() - 90 * 86400000).toISOString(),
+      issuing_entity: "Apollo Diagnostics Lab",
+      accreditation: "NABL Accredited (Cert #MC-1802)",
+      lab_license: "DL-APO-2023-4412",
+      patient_match_score: "99.6% (Matched with ABHA 91-4829-1029-4821)",
+      authenticity_status: "OFFICIAL_VERIFIED",
+      cryptographic_hash: "sha256_6a4f44e3194c4fce9d85dc2557831a03",
+      digital_signature: "Digitally Signed by Dr. Shreya Sen, MD (Biochemistry)",
       tests: [
         { name: "Fasting Blood Sugar", value: 152.0, unit: "mg/dL", normal_min: 70, normal_max: 99, flag: "high" },
         { name: "HbA1c", value: 7.9, unit: "%", normal_min: 4.0, normal_max: 5.6, flag: "high" },
@@ -193,6 +239,13 @@ export const demoStore = {
       file_name: "LalPath_Complete_Oct2026.pdf",
       status: "ready",
       uploaded_at: new Date(Date.now() - 14 * 86400000).toISOString(),
+      issuing_entity: "Dr. Lal PathLabs",
+      accreditation: "NABL Accredited (Cert #MC-3104) & ISO 15189",
+      lab_license: "DL-LAL-2025-1109",
+      patient_match_score: "99.9% (Matched with ABHA 91-4829-1029-4821)",
+      authenticity_status: "OFFICIAL_VERIFIED",
+      cryptographic_hash: "sha256_1ee38b900ed741fba321f01c6360c346",
+      digital_signature: "Digitally Signed by Dr. Sunita Rao, MD (Pathology)",
       tests: [
         { name: "Fasting Blood Sugar", value: 128.0, unit: "mg/dL", normal_min: 70, normal_max: 99, flag: "high" },
         { name: "HbA1c", value: 7.2, unit: "%", normal_min: 4.0, normal_max: 5.6, flag: "high" },
@@ -201,5 +254,5 @@ export const demoStore = {
         { name: "Hemoglobin", value: 14.2, unit: "g/dL", normal_min: 13, normal_max: 17, flag: "normal" },
       ],
     },
-  ],
+  ] as ClinicalDocument[],
 };

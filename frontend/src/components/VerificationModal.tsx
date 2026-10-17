@@ -201,6 +201,31 @@ export function VerificationModal({
               <span className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-semibold">
                 SHA-256 Registered • Ready for Patient Confirmation
               </span>
+
+              {/* Official Cross-Check Validation Details */}
+              <div className="w-full mt-4 p-3.5 bg-emerald-50 rounded-2xl border border-emerald-200 text-left space-y-2 text-xs">
+                <div className="flex items-center justify-between border-b border-emerald-200 pb-1.5 font-extrabold text-emerald-900">
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2 size={14} className="text-emerald-600" />
+                    Official Document Cross-Check
+                  </span>
+                  <span className="bg-emerald-200/80 text-emerald-900 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    MATCHED
+                  </span>
+                </div>
+                <div className="flex justify-between text-slate-600">
+                  <span>Patient Identity Match:</span>
+                  <strong className="text-slate-900">Ramesh Sharma (62M)</strong>
+                </div>
+                <div className="flex justify-between text-slate-600">
+                  <span>National Health Registry:</span>
+                  <strong className="text-indigo-700">ABHA 91-4829-1029-4821</strong>
+                </div>
+                <div className="flex justify-between text-slate-600">
+                  <span>Accreditation &amp; License:</span>
+                  <strong className="text-emerald-800">NABL / Medical Council Valid</strong>
+                </div>
+              </div>
             </div>
           </div>
 

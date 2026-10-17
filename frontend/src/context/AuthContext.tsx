@@ -20,6 +20,10 @@ interface Profile {
   allergies: string[];
   chronic_conditions: string[];
   preferred_language: string;
+  abha_id?: string;
+  abha_address?: string;
+  identity_status?: string;
+  verified_via?: string;
 }
 
 interface AuthContextType {

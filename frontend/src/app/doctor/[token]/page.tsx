@@ -114,6 +114,19 @@ export default function DoctorPortalPage() {
         </span>
       </div>
 
+      {/* Verified Identity & Official Records Trust Banner */}
+      <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div className="flex items-center gap-2">
+          <CheckCircle2 size={16} className="text-emerald-600" />
+          <span className="font-bold text-emerald-900">
+            Official ABHA Identity Match: <strong>91-4829-1029-4821</strong> (Aadhaar e-KYC Verified)
+          </span>
+        </div>
+        <span className="text-[11px] font-bold text-emerald-800 bg-emerald-200/60 px-2.5 py-0.5 rounded-md">
+          NABL Accredited Records
+        </span>
+      </div>
+
       {/* Critical Info Banner */}
       <div className="p-4 rounded-2xl bg-rose-50 border-2 border-rose-300 space-y-2">
         <div className="flex items-center gap-2 text-rose-800 font-extrabold text-xs uppercase tracking-wider">

@@ -23,6 +23,7 @@ export async function GET(request: Request, { params }: { params: { token: strin
       chronic_conditions: demoStore.profile.chronic_conditions,
       emergency_contacts: demoStore.emergencyContacts,
       active_medicines: activeMedicines,
+      abha_id: demoStore.profile.abha_id || "91-4829-1029-4821",
     },
   });
 }

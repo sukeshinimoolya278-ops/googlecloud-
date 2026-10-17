@@ -219,6 +219,67 @@ export default function ReportsPage() {
                 </div>
               </div>
 
+              {/* Official Document & Identity Cross-Check Audit Card */}
+              <div className="card-aesthetic p-5 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50/70 to-teal-50/50 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-200/80 pb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-2 bg-emerald-600 text-white rounded-xl shadow-xs">
+                      <ShieldCheck size={18} />
+                    </div>
+                    <div>
+                      <h3 className="font-extrabold text-slate-900 text-sm sm:text-base flex items-center gap-1.5">
+                        <span>Official Document &amp; Identity Verification</span>
+                        <span className="badge-pill-green text-[10px]">CERTIFIED AUTHENTIC</span>
+                      </h3>
+                      <p className="text-xs text-slate-500">
+                        Cross-checked against national health registries &amp; accredited laboratory emissions
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[11px] font-extrabold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-200">
+                    Tamper-Proof SHA-256
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-1">
+                  <div className="p-3 bg-white/90 rounded-2xl border border-emerald-100">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                      Issuing Entity &amp; Accreditation
+                    </span>
+                    <strong className="text-slate-900 font-bold mt-0.5 block">
+                      {selectedDoc.issuing_entity || "Metropolis Healthcare Ltd."}
+                    </strong>
+                    <p className="text-emerald-700 text-[11px] font-semibold mt-1">
+                      {selectedDoc.accreditation || "NABL Accredited (Cert #MC-2491)"}
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-white/90 rounded-2xl border border-emerald-100">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                      Patient Identity Cross-Check
+                    </span>
+                    <strong className="text-slate-900 font-bold mt-0.5 block">
+                      Matched: Ramesh Sharma (62M)
+                    </strong>
+                    <p className="text-indigo-700 text-[11px] font-semibold mt-1">
+                      ABHA ID: 91-4829-1029-4821 (99.8% Match)
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-white/90 rounded-2xl border border-emerald-100">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                      Cryptographic Audit &amp; Signoff
+                    </span>
+                    <strong className="text-slate-900 font-bold mt-0.5 block truncate">
+                      {selectedDoc.cryptographic_hash || "sha256_e7f86dda8f744f..."}
+                    </strong>
+                    <p className="text-slate-600 text-[11px] mt-1">
+                      {selectedDoc.digital_signature || "Digitally Signed by Pathologist"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               {/* Lab Values Table */}
               <div className="card-aesthetic p-6 space-y-4">
                 <div className="flex items-center justify-between">

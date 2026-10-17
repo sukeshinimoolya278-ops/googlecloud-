@@ -22,7 +22,8 @@ import {
   Clock,
   Sparkles,
   Stethoscope,
-  Edit3
+  Edit3,
+  ShieldCheck
 } from "lucide-react";
 
 export default function HomePage() {
@@ -71,6 +72,10 @@ export default function HomePage() {
           </span>
           <span className="badge-pill-green">
             {profile?.allergies?.[0] ? `${profile.allergies[0]} Allergic` : "Penicillin Allergic"}
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-800 border border-sky-200">
+            <ShieldCheck size={13} className="text-sky-600" />
+            <span>ABHA Verified: {profile?.abha_id || "91-4829-1029-4821"}</span>
           </span>
         </div>
 
