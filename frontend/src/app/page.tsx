@@ -1,408 +1,305 @@
 "use client";
 
 import React, { useState } from "react";
-import { useTheme } from "./providers";
+import Link from "next/link";
+import { useLanguage } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
-import { useLanguage, Language } from "../context/LanguageContext";
-import { AuthModal } from "../components/AuthModal";
+import { UploadModal } from "../components/UploadModal";
+import { VerificationModal } from "../components/VerificationModal";
+import { ProfileEditModal } from "../components/ProfileEditModal";
 import {
-  Sun,
-  Moon,
-  Activity,
+  FileUp,
+  AlertTriangle,
   QrCode,
-  Pill,
-  Upload,
-  ShieldCheck,
-  Languages,
-  User as UserIcon,
-  Stethoscope,
-  LogOut,
-  Sparkles,
+  Volume2,
+  VolumeX,
+  PhoneCall,
+  Activity,
+  Heart,
+  ShieldAlert,
   ArrowRight,
-  HeartPulse,
-  UserCheck
+  CheckCircle,
+  Clock,
+  Sparkles,
+  Stethoscope,
+  Edit3
 } from "lucide-react";
 
-export default function Home() {
-  const { theme, toggleTheme, fontScale, increaseFontSize, decreaseFontSize, resetFontSize } = useTheme();
-  const { user, logout, isLoading } = useAuth();
-  const { language, setLanguage, t } = useLanguage();
+export default function HomePage() {
+  const { t, language, speak, isSpeaking, stopSpeaking } = useLanguage();
+  const { profile, emergencyContacts, refreshProfile } = useAuth();
+  const [showUpload, setShowUpload] = useState(false);
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
+  const [verificationDoc, setVerificationDoc] = useState<any | null>(null);
 
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [roleModalOpen, setRoleModalOpen] = useState(false);
+  const handleReadSummary = () => {
+    if (isSpeaking) {
+      stopSpeaking();
+      return;
+    }
+    const name = profile?.full_name || "Ramesh Sharma";
+    const bg = profile?.blood_group || "B+";
+    const textToRead =
+      language === "hi"
+        ? `नमस्ते ${name}। आपका ब्लड ग्रुप ${bg} है। आपको पेनिसिलिन से एलर्जी है। आपकी वर्तमान दवाइयां समय पर लें और आपातकाल में संपर्क करें।`
+        : language === "kn"
+        ? `ನಮಸ್ಕಾರ ${name}. ನಿಮ್ಮ ರಕ್ತದ ಗುಂಪು ${bg}. ಪೆನ್ಸಿಲಿನ್ ಅಲರ್ಜಿ ಇದೆ. ನಿಯಮಿತವಾಗಿ ಔಷಧಿ ತೆಗೆದುಕೊಳ್ಳಿ.`
+        : language === "ta"
+        ? `வணக்கம் ${name}. உங்கள் இரத்த வகை ${bg}. பென்சிலின் ஒவ்வாமை உள்ளது.`
+        : `Hello ${name}. Blood group ${bg}. Severe penicillin allergy recorded. Taking 3 active medications.`;
+    speak(textToRead);
+  };
+
+  const primaryContact = emergencyContacts[0] || { name: "Pooja Sharma", phone: "+919811122233" };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full transition-colors duration-200">
-      {/* Top Bar / Navigation */}
-      <header className="flex items-center justify-between pb-6 border-b border-[var(--border-subtle)] gap-3 flex-wrap">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-[var(--badge-bg)] flex items-center justify-center text-[var(--accent-lime)] shadow-sm">
-            <HeartPulse className="w-7 h-7" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">
-              {t("appName")}
-            </h1>
-            <p className="text-xs sm:text-sm text-[var(--text-secondary)] font-medium">
-              {t("tagline")} &bull; Phase 2 Auth & Roles
-            </p>
-          </div>
-        </div>
-
-        {/* Controls: A+/A-, Lang, Theme, User Auth */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* Text scale */}
-          <div className="flex items-center bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-full px-2 py-1 shadow-sm">
-            <button
-              onClick={decreaseFontSize}
-              aria-label="Decrease text size"
-              className="px-2 py-1 text-sm font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-            >
-              A-
-            </button>
-            <button
-              onClick={resetFontSize}
-              aria-label="Reset text size"
-              className="px-2 py-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-            >
-              {(fontScale * 100).toFixed(0)}%
-            </button>
-            <button
-              onClick={increaseFontSize}
-              aria-label="Increase text size"
-              className="px-2 py-1 text-sm font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-            >
-              A+
-            </button>
-          </div>
-
-          {/* Language Selector */}
-          <div className="flex items-center bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-full px-3 py-1.5 shadow-sm text-sm font-medium">
-            <Languages className="w-4 h-4 mr-1 text-[var(--text-muted)]" />
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value as Language)}
-              className="bg-transparent text-[var(--text-primary)] outline-none cursor-pointer"
-            >
-              <option value="en" className="bg-slate-900 text-white">English</option>
-              <option value="hi" className="bg-slate-900 text-white">हिंदी</option>
-              <option value="kn" className="bg-slate-900 text-white">ಕನ್ನಡ</option>
-            </select>
-          </div>
-
-          {/* Theme Switcher */}
+    <div className="space-y-6">
+      {/* Top Profile Bar (Both PC & Mobile) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-white rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="flex flex-wrap items-center gap-2">
           <button
-            onClick={toggleTheme}
-            aria-label="Toggle theme mode"
-            className="w-10 h-10 rounded-full bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-primary)] hover:border-[var(--accent-lime)] transition-colors shadow-sm cursor-pointer"
+            onClick={() => setShowProfileEdit(true)}
+            className="badge-pill-indigo hover:opacity-90 transition-all flex items-center gap-1.5 cursor-pointer"
+            title="Click to edit profile"
           >
-            {theme === "dark" ? (
-              <Sun className="w-5 h-5 text-[#b4f434]" />
-            ) : (
-              <Moon className="w-5 h-5 text-slate-700" />
-            )}
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <span>{profile?.full_name || "Ramesh Sharma"} ({profile?.age || 62}M)</span>
+            <Edit3 size={11} className="ml-0.5 text-indigo-200" />
           </button>
-
-          {/* User Status / Login Button */}
-          {user ? (
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => setRoleModalOpen(true)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-lime)] text-xs font-bold text-[var(--text-primary)] shadow-sm cursor-pointer"
-                title="Click to switch role or edit profile"
-              >
-                {user.role === "doctor" ? (
-                  <Stethoscope className="w-3.5 h-3.5 text-[var(--badge-text)]" />
-                ) : (
-                  <UserIcon className="w-3.5 h-3.5 text-[var(--badge-text)]" />
-                )}
-                <span className="capitalize">{user.role}</span>
-              </button>
-              <button
-                onClick={logout}
-                aria-label="Log Out"
-                className="w-10 h-10 rounded-full bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center justify-center text-red-400 hover:bg-red-500/10 transition-colors shadow-sm cursor-pointer"
-                title={t("logout")}
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setAuthModalOpen(true)}
-              className="vault-btn-primary text-sm px-4 py-2 font-bold flex items-center gap-1.5 cursor-pointer"
-            >
-              <UserCheck className="w-4 h-4" />
-              <span>Log In</span>
-            </button>
-          )}
+          <span className="badge-pill-magenta">
+            Blood Group: {profile?.blood_group || "B+"}
+          </span>
+          <span className="badge-pill-green">
+            {profile?.allergies?.[0] ? `${profile.allergies[0]} Allergic` : "Penicillin Allergic"}
+          </span>
         </div>
-      </header>
 
-      {/* Main Container */}
-      <main className="flex-1 py-8 flex flex-col gap-6">
-        {/* User Welcome / Active Session Banner */}
-        {user ? (
-          <section className="vault-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-l-[var(--accent-lime)]">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-[var(--badge-bg)] text-[var(--badge-text)] flex items-center justify-center font-bold text-xl shadow-inner">
-                {user.role === "doctor" ? <Stethoscope className="w-8 h-8" /> : <UserIcon className="w-8 h-8" />}
+        <button
+          onClick={handleReadSummary}
+          className="flex items-center gap-2 px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-full text-xs font-bold transition-all shadow-xs"
+        >
+          {isSpeaking ? (
+            <>
+              <VolumeX size={15} className="text-rose-500" />
+              <span>Stop Speaking</span>
+            </>
+          ) : (
+            <>
+              <Volume2 size={15} className="text-purple-600" />
+              <span>{t("readAloud")}</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Main Responsive Grid: 1 Col on Mobile, 2 Cols on PC (lg:grid-cols-12) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Column (lg:col-span-7) */}
+        <div className="lg:col-span-7 space-y-5">
+          {/* Hero Banner */}
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-700 via-fuchsia-600 to-pink-600 p-6 sm:p-8 text-white shadow-xl">
+            <div className="relative z-10 space-y-4">
+              <div className="inline-block px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-extrabold tracking-wide uppercase">
+                Emergency &amp; Clinical Lifeline
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold text-[var(--text-primary)]">
-                    {user.full_name}
-                  </h2>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--badge-bg)] text-[var(--badge-text)] capitalize">
-                    {user.role}
-                  </span>
+              <h1 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
+                Your Entire Medical History, <br />
+                <span className="text-yellow-300">One Scan Away.</span>
+              </h1>
+              <p className="text-white/85 text-xs sm:text-base font-medium max-w-lg">
+                AI extracted, patient confirmed, and translated in Hindi, Kannada, Tamil, &amp; English.
+              </p>
+
+              <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => setShowUpload(true)}
+                  className="flex items-center justify-center gap-2.5 py-3.5 px-6 bg-white text-slate-900 rounded-2xl font-bold text-sm sm:text-base shadow-lg hover:bg-slate-50 transition-all active:scale-95"
+                >
+                  <FileUp size={20} className="text-purple-600" />
+                  <span>{t("uploadReport")}</span>
+                </button>
+                <Link
+                  href="/qr"
+                  className="flex items-center justify-center gap-2 py-3.5 px-6 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-2xl font-bold text-sm sm:text-base text-white transition-all"
+                >
+                  <QrCode size={20} />
+                  <span>{t("qr")}</span>
+                </Link>
+              </div>
+            </div>
+
+            <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+          </div>
+
+          {/* Emergency Alert Banner */}
+          <div className="card-aesthetic p-5 border-l-4 border-rose-500 bg-rose-50/40">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-3.5">
+                <div className="p-3 bg-rose-100 text-rose-600 rounded-2xl mt-0.5 shrink-0">
+                  <ShieldAlert size={24} />
                 </div>
-                <p className="text-sm text-[var(--text-secondary)] mt-0.5">
-                  {user.role === "doctor"
-                    ? `License: ${user.doctor_reg_no || "KMC-48291"} • Doctor Portal`
-                    : `Phone: ${user.phone || "+919876543210"} • Blood Group: ${user.profile?.blood_group || "B+"}`}
-                </p>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-extrabold text-slate-900 text-base">
+                      {t("emergencyQR")}
+                    </h3>
+                    <span className="badge-critical text-[10px]">CRITICAL</span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                    Severe Allergies: <strong className="text-rose-700">{profile?.allergies?.join(", ") || "Penicillin, Sulfa drugs"}</strong>
+                  </p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Emergency Contact: {primaryContact.name} ({primaryContact.phone})
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setRoleModalOpen(true)}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card-subtle)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent-lime)] transition-all cursor-pointer"
-              >
-                Switch Role / Edit
-              </button>
-            </div>
-          </section>
-        ) : (
-          <section className="vault-card p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-[var(--bg-card)] to-[var(--bg-card-subtle)]">
-            <div className="max-w-xl">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[var(--badge-bg)] text-[var(--badge-text)] mb-3">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Phase 2 Live &bull; Demo Ready</span>
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <a
+                  href={`tel:${primaryContact.phone}`}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all"
+                >
+                  <PhoneCall size={15} /> Call
+                </a>
+                <Link
+                  href="/qr?tab=emergency"
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all"
+                >
+                  Show QR
+                </Link>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight">
-                {t("loginTitle")}
-              </h2>
-              <p className="text-base text-[var(--text-secondary)] mt-2">
-                {t("loginSubtitle")}
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <button
-                onClick={() => setAuthModalOpen(true)}
-                className="vault-btn-primary text-base font-bold px-6 py-3.5 flex items-center justify-center gap-2 cursor-pointer shadow-lg"
-              >
-                <span>{t("demoLogin")}</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-          </section>
-        )}
-
-        {/* Doctor View vs Patient View */}
-        {user?.role === "doctor" ? (
-          <div className="flex flex-col gap-6">
-            <div className="vault-card p-8 text-center flex flex-col items-center justify-center">
-              <div className="w-20 h-20 rounded-3xl bg-[var(--badge-bg)] text-[var(--badge-text)] flex items-center justify-center mb-4">
-                <QrCode className="w-10 h-10" />
-              </div>
-              <h3 className="text-2xl font-bold text-[var(--text-primary)]">
-                Scan Patient QR Code
-              </h3>
-              <p className="text-base text-[var(--text-secondary)] max-w-md mt-2">
-                In Phase 7, doctors scan patient tokens to request 24-hour access to clinical records, lab trends, and active prescriptions.
-              </p>
-              <button
-                className="vault-btn-primary mt-6 text-base font-bold px-8 py-3.5 flex items-center gap-2 opacity-90 cursor-not-allowed"
-                disabled
-              >
-                <QrCode className="w-5 h-5" />
-                <span>Scan QR / Enter Code (Phase 7)</span>
-              </button>
             </div>
           </div>
-        ) : (
-          <>
-            {/* Health Overview Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Card 1: Wellness */}
-              <div className="vault-card p-6 flex flex-col justify-between">
-                <div className="flex justify-between items-start">
-                  <span className="text-xs uppercase font-bold tracking-wider text-[var(--text-muted)]">
-                    Health Status
-                  </span>
-                  <div className="w-8 h-8 rounded-full bg-[var(--badge-bg)] flex items-center justify-center text-[var(--badge-text)]">
-                    <Activity className="w-4 h-4" />
-                  </div>
-                </div>
-                <div className="my-4">
-                  <span className="text-4xl font-extrabold text-[var(--text-primary)]">86</span>
-                  <span className="text-sm text-[var(--text-secondary)]">/100</span>
-                  <p className="text-sm font-medium text-[var(--badge-text)] mt-1">
-                    ● Looking good
-                  </p>
-                </div>
-                <div className="w-full bg-[var(--bg-card-subtle)] h-2 rounded-full overflow-hidden">
-                  <div className="bg-[var(--accent-lime)] h-full w-[86%]" />
-                </div>
-              </div>
+        </div>
 
-              {/* Card 2: Lab Results */}
-              <div className="vault-card p-6 flex flex-col justify-between">
-                <div className="flex justify-between items-start">
-                  <span className="text-xs uppercase font-bold tracking-wider text-[var(--text-muted)]">
-                    Lab Results
-                  </span>
-                  <div className="w-8 h-8 rounded-full bg-[var(--badge-bg)] flex items-center justify-center text-[var(--badge-text)]">
-                    <Upload className="w-4 h-4" />
-                  </div>
-                </div>
-                <div className="my-4">
-                  <span className="text-4xl font-extrabold text-[var(--text-primary)]">14</span>
-                  <span className="text-sm text-[var(--text-secondary)]">/25 results</span>
-                  <p className="text-sm font-medium text-amber-400 mt-1">
-                    ● Hemoglobin & Glucose flagged
-                  </p>
-                </div>
-                <div className="w-full bg-[var(--bg-card-subtle)] h-2 rounded-full overflow-hidden">
-                  <div className="bg-amber-400 h-full w-[56%]" />
-                </div>
+        {/* Right Column (lg:col-span-5) */}
+        <div className="lg:col-span-5 space-y-4">
+          {/* Quick Stats Grid */}
+          <div className="grid grid-cols-2 gap-3">
+            <Link
+              href="/medicines"
+              className="card-aesthetic p-4 hover:border-purple-300 group"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="p-2.5 rounded-xl bg-purple-100 text-purple-700 group-hover:scale-105 transition-all">
+                  <Activity size={20} />
+                </span>
+                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+                  3 Active
+                </span>
               </div>
+              <h4 className="font-bold text-slate-800 text-sm">{t("medicines")}</h4>
+              <p className="text-xs text-slate-500 mt-1">
+                Metformin, Telma, Atorva
+              </p>
+            </Link>
 
-              {/* Card 3: Active Medicines */}
-              <div className="vault-card p-6 flex flex-col justify-between">
-                <div className="flex justify-between items-start">
-                  <span className="text-xs uppercase font-bold tracking-wider text-[var(--text-muted)]">
-                    {t("myMedicines")}
-                  </span>
-                  <div className="w-8 h-8 rounded-full bg-[var(--badge-bg)] flex items-center justify-center text-[var(--badge-text)]">
-                    <Pill className="w-4 h-4" />
-                  </div>
-                </div>
-                <div className="my-4">
-                  <span className="text-4xl font-extrabold text-[var(--text-primary)]">2</span>
-                  <span className="text-sm text-[var(--text-secondary)]"> active meds</span>
-                  <p className="text-sm font-medium text-[var(--badge-text)] mt-1">
-                    ● Metformin & Amlodipine
-                  </p>
-                </div>
-                <div className="w-full bg-[var(--bg-card-subtle)] h-2 rounded-full overflow-hidden">
-                  <div className="bg-[var(--accent-lime)] h-full w-[67%]" />
-                </div>
+            <Link
+              href="/reports"
+              className="card-aesthetic p-4 hover:border-fuchsia-300 group"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="p-2.5 rounded-xl bg-pink-100 text-pink-700 group-hover:scale-105 transition-all">
+                  <Heart size={20} />
+                </span>
+                <span className="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full">
+                  3 Labs
+                </span>
               </div>
+              <h4 className="font-bold text-slate-800 text-sm">{t("reports")}</h4>
+              <p className="text-xs text-slate-500 mt-1">
+                HbA1c 7.2% (Controlled)
+              </p>
+            </Link>
+          </div>
+
+          {/* Active Doctor Consent Status Card */}
+          <div className="card-aesthetic p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+                  <Stethoscope size={18} />
+                </div>
+                <h3 className="font-bold text-slate-900 text-sm">
+                  Doctor Consent Portal
+                </h3>
+              </div>
+              <span className="badge-pill-green text-[10px]">
+                Authorized
+              </span>
             </div>
 
-            {/* 4 Large Core Action Cards from Section 10 */}
-            <section>
-              <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">
-                Core Vault Modules
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {/* Module 1: Upload */}
-                <div className="vault-card p-5 flex flex-col justify-between hover:border-[var(--accent-lime)] transition-all cursor-pointer group">
-                  <div className="w-12 h-12 rounded-2xl bg-[var(--badge-bg)] text-[var(--badge-text)] flex items-center justify-center mb-4">
-                    <Upload className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-[var(--text-primary)]">
-                      {t("uploadReport")}
-                    </h4>
-                    <p className="text-sm text-[var(--text-secondary)] mt-1">
-                      AI extracts key tests into plain language.
-                    </p>
-                  </div>
-                  <div className="mt-4 flex items-center text-sm font-bold text-[var(--badge-text)] group-hover:translate-x-1 transition-transform">
-                    <span>Phase 4</span>
-                    <ArrowRight className="w-4 h-4 ml-1" />
-                  </div>
-                </div>
+            <p className="text-xs text-slate-600">
+              Active: <strong>Apollo Emergency (Dr. Mehta)</strong> has time-limited read access.
+            </p>
 
-                {/* Module 2: Medicines */}
-                <div className="vault-card p-5 flex flex-col justify-between hover:border-[var(--accent-lime)] transition-all cursor-pointer group">
-                  <div className="w-12 h-12 rounded-2xl bg-[var(--badge-bg)] text-[var(--badge-text)] flex items-center justify-center mb-4">
-                    <Pill className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-[var(--text-primary)]">
-                      {t("myMedicines")}
-                    </h4>
-                    <p className="text-sm text-[var(--text-secondary)] mt-1">
-                      Dose timing, meal guidance & one-tap intake.
-                    </p>
-                  </div>
-                  <div className="mt-4 flex items-center text-sm font-bold text-[var(--badge-text)] group-hover:translate-x-1 transition-transform">
-                    <span>Phase 5</span>
-                    <ArrowRight className="w-4 h-4 ml-1" />
-                  </div>
-                </div>
+            <div className="p-3 bg-slate-50 rounded-xl flex items-center justify-between text-xs">
+              <span className="text-slate-500 flex items-center gap-1.5">
+                <Clock size={14} className="text-slate-400" />
+                Expires in ~22 hours
+              </span>
+              <Link
+                href="/qr?tab=consent"
+                className="font-bold text-purple-600 hover:text-purple-800 flex items-center gap-1"
+              >
+                Manage <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
 
-                {/* Module 3: Doctor QR */}
-                <div className="vault-card p-5 flex flex-col justify-between hover:border-[var(--accent-lime)] transition-all cursor-pointer group">
-                  <div className="w-12 h-12 rounded-2xl bg-[var(--badge-bg)] text-[var(--badge-text)] flex items-center justify-center mb-4">
-                    <QrCode className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-[var(--text-primary)]">
-                      {t("doctorQr")}
-                    </h4>
-                    <p className="text-sm text-[var(--text-secondary)] mt-1">
-                      Grant secure 24-hr access to your physician.
-                    </p>
-                  </div>
-                  <div className="mt-4 flex items-center text-sm font-bold text-[var(--badge-text)] group-hover:translate-x-1 transition-transform">
-                    <span>Phase 6</span>
-                    <ArrowRight className="w-4 h-4 ml-1" />
-                  </div>
-                </div>
+          {/* AI Multilingual Translator Card */}
+          <div className="card-aesthetic p-5 bg-gradient-to-br from-purple-50/60 to-pink-50/40">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles size={16} className="text-purple-600" />
+              <h4 className="font-bold text-slate-900 text-sm">
+                4-Language Plain Translation
+              </h4>
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Medical reports are simplified with zero jargon. Read them in English, Hindi, Kannada, or Tamil anytime.
+            </p>
+            <div className="mt-3 flex gap-2">
+              <Link
+                href="/reports"
+                className="btn-secondary text-xs py-2 w-auto px-4"
+              >
+                Browse Reports
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
 
-                {/* Module 4: Emergency Card */}
-                <div className="vault-card p-5 flex flex-col justify-between hover:border-red-400/50 transition-all cursor-pointer group">
-                  <div className="w-12 h-12 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center mb-4">
-                    <ShieldCheck className="w-6 h-6 text-red-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-[var(--text-primary)]">
-                      {t("emergencyCard")}
-                    </h4>
-                    <p className="text-sm text-[var(--text-secondary)] mt-1">
-                      Public instant life-saving scan without login.
-                    </p>
-                  </div>
-                  <div className="mt-4 flex items-center text-sm font-bold text-red-400 group-hover:translate-x-1 transition-transform">
-                    <span>Phase 3 & 6</span>
-                    <ArrowRight className="w-4 h-4 ml-1" />
-                  </div>
-                </div>
-              </div>
-            </section>
-          </>
-        )}
-      </main>
+      {/* Upload Modal */}
+      {showUpload && (
+        <UploadModal
+          onClose={() => setShowUpload(false)}
+          onUploadSuccess={(doc) => {
+            setShowUpload(false);
+            setVerificationDoc(doc);
+          }}
+        />
+      )}
 
-      {/* Footer / Safety Disclaimer (Section 9) */}
-      <footer className="pt-6 border-t border-[var(--border-subtle)] text-center text-xs text-[var(--text-muted)] flex flex-col gap-2">
-        <p className="max-w-2xl mx-auto leading-relaxed">
-          &ldquo;{t("disclaimer")}&rdquo;
-        </p>
-        <p className="text-[var(--text-muted)]">
-          {t("appName")} &copy; 2025 &bull; Built with Next.js, FastAPI & Google Gemini
-        </p>
-      </footer>
+      {/* Verification Modal with real dynamic document extraction */}
+      {verificationDoc && (
+        <VerificationModal
+          documentId={verificationDoc.id}
+          fileName={verificationDoc.file_name}
+          docType={verificationDoc.type}
+          onClose={() => setVerificationDoc(null)}
+          onConfirmSuccess={() => {
+            setVerificationDoc(null);
+            refreshProfile();
+            alert("Verification complete! Data is confirmed and saved to your vault.");
+          }}
+        />
+      )}
 
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-      />
-
-      {/* Role Switcher Modal */}
-      <AuthModal
-        isOpen={roleModalOpen}
-        onClose={() => setRoleModalOpen(false)}
-        initialRoleSwitch={true}
-      />
+      {/* Profile Edit Modal */}
+      {showProfileEdit && (
+        <ProfileEditModal onClose={() => setShowProfileEdit(false)} />
+      )}
     </div>
   );
 }

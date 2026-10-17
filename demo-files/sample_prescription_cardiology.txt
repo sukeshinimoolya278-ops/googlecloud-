@@ -1,27 +1,25 @@
-APOLLO SPECIALTY HOSPITALS - OUTPATIENT PRESCRIPTION
-Doctor: Dr. Emily Peterson, MD, DM (Cardiology) - Reg No: KMC-48291
-Clinic: Cardiology Suite 4B, Apollo Health City
-Date: 2025-02-01
-
-Patient Name: Rahul Sharma     Age: 42     Gender: M
-Diagnosis: Essential Hypertension, Dyslipidemia, Mild Type 2 DM
-
+DR. ARVIND VERMA, MD (Internal Medicine)
+Reg No: KMC-49210-A
+Fortis Hospital Bannerghatta Road, Bengaluru
+============================================================
+Date: 16-Oct-2026
+Patient: Ramesh Sharma | Age: 62 Y | Sex: M
+Known case: Type 2 Diabetes Mellitus, Essential HTN
+Known Drug Allergies: Penicillin, Sulfa
+============================================================
 Rx:
-1. Tab Metformin 500 mg
-   Dose: 1 tablet twice daily (1-0-1)
-   Timing: Morning and Night after food
-   Duration: 90 days
-   Purpose: Blood sugar regulation
+1. Tab. Glycomet SR (Metformin) 500mg
+   - 1 Tab Twice daily (Morning & Night) after meals x 90 days
 
-2. Tab Amlodipine 5 mg
-   Dose: 1 tablet once daily (1-0-0)
-   Timing: Morning after breakfast
-   Duration: 30 days
-   Purpose: Blood pressure management
+2. Tab. Telma (Telmisartan) 40mg
+   - 1 Tab Once daily in the morning empty stomach x 90 days
 
-Special Instructions:
-- Avoid excessive sodium in diet.
-- Monitor BP and Fasting Blood Glucose weekly.
-- Review after 30 days with repeat lipid profile.
+3. Tab. Atorva (Atorvastatin) 10mg
+   - 1 Tab at bedtime after dinner x 90 days
 
-Signature: [Dr. Emily Peterson]
+4. Tab. Dolo 650 (Paracetamol) 650mg
+   - SOS (as needed for mild fever or body ache) x 3 days
+============================================================
+Advice: Avoid Penicillin group antibiotics. Follow low GI diabetic diet.
+Next Review: 3 Months.
+Sign: Dr. Arvind Verma

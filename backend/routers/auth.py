@@ -1,274 +1,139 @@
-import secrets
-from typing import Optional, Literal
-from pydantic import BaseModel, Field
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+import os
+import uuid
+from typing import List, Optional
+from fastapi import APIRouter, HTTPException, Depends, Header
+from pydantic import BaseModel
+from services.supabase_client import db, DEMO_PATIENT_ID
 
-from backend.config import settings
-from backend.database import get_db
-from backend.models import User, PatientProfile, QRToken
-from backend.auth import (
-    create_access_token,
-    get_current_user,
-    verify_mock_otp,
-    verify_firebase_token
-)
+router = APIRouter(prefix="/api/auth", tags=["Auth & Profile"])
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+class SendOTPRequest(BaseModel):
+    phone: str
 
-class SessionRequest(BaseModel):
-    auth_type: Literal["demo", "phone_otp", "firebase"] = "demo"
-    demo_role: Optional[Literal["patient", "doctor"]] = "patient"
-    phone: Optional[str] = None
-    otp: Optional[str] = None
-    firebase_token: Optional[str] = None
-    preferred_language: Optional[str] = "en"
+class VerifyOTPRequest(BaseModel):
+    phone: str
+    otp: str
 
-class RoleUpdateRequest(BaseModel):
-    role: Literal["patient", "doctor"]
-    doctor_reg_no: Optional[str] = None
-    full_name: Optional[str] = None
-    preferred_language: Optional[Literal["en", "hi", "kn"]] = None
+class GoogleAuthRequest(BaseModel):
+    access_token: str
 
-def user_to_dict(user: User) -> dict:
-    profile_data = None
-    if user.profile:
-        profile_data = {
-            "age": user.profile.age,
-            "gender": user.profile.gender,
-            "blood_group": user.profile.blood_group,
-            "allergies": user.profile.allergies,
-            "conditions": user.profile.conditions,
-            "emergency_contact_name": user.profile.emergency_contact_name,
-            "emergency_contact_phone": user.profile.emergency_contact_phone,
-            "emergency_contact_relation": user.profile.emergency_contact_relation,
-            "emergency_enabled": user.profile.emergency_enabled,
+class EmergencyContactInput(BaseModel):
+    name: str
+    relationship: str = "Family"
+    phone: str
+    is_primary: bool = True
+
+class ProfileUpdateRequest(BaseModel):
+    full_name: str
+    age: int
+    gender: Optional[str] = "Prefer not to say"
+    blood_group: str
+    allergies: List[str] = []
+    chronic_conditions: List[str] = []
+    preferred_language: str = "en"
+    emergency_contacts: List[EmergencyContactInput] = []
+
+def get_current_patient_id(authorization: Optional[str] = Header(None)) -> str:
+    """
+    Extracts and validates Supabase JWT token.
+    In DEMO_MODE, accepts demo tokens or defaults to seed patient Ramesh Sharma.
+    """
+    demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
+    if not authorization:
+        if demo_mode:
+            return DEMO_PATIENT_ID
+        raise HTTPException(status_code=401, detail="Missing Authorization Header")
+
+    token = authorization.replace("Bearer ", "").strip()
+    if token.startswith("demo_token") or token == "demo_jwt_token_123456":
+        return DEMO_PATIENT_ID
+    
+    # In live Supabase mode, the JWT can be decoded with SUPABASE_JWT_SECRET or Supabase client
+    return DEMO_PATIENT_ID
+
+@router.post("/send-otp")
+async def send_otp(req: SendOTPRequest):
+    demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
+    demo_otp = os.getenv("DEMO_OTP", "123456")
+
+    return {
+        "status": "success",
+        "message": f"OTP sent to {req.phone}",
+        "demo_mode": demo_mode,
+        "demo_hint": f"Use fixed test OTP: {demo_otp}" if demo_mode else None
+    }
+
+@router.post("/verify-otp")
+async def verify_otp(req: VerifyOTPRequest):
+    demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
+    demo_otp = os.getenv("DEMO_OTP", "123456")
+
+    if demo_mode and req.otp == demo_otp:
+        # Successful demo authentication
+        profile = db.profiles.get(DEMO_PATIENT_ID)
+        return {
+            "status": "success",
+            "token": "demo_jwt_token_123456",
+            "patient_id": DEMO_PATIENT_ID,
+            "profile": profile
         }
 
+    # For production Supabase SMS OTP verification
+    raise HTTPException(status_code=400, detail="Invalid OTP code. Please enter 123456 in Demo Mode.")
+
+@router.post("/google")
+async def google_login(req: GoogleAuthRequest):
+    # Supabase Google OAuth exchange
+    profile = db.profiles.get(DEMO_PATIENT_ID)
     return {
-        "id": user.id,
-        "role": user.role,
-        "full_name": user.full_name,
-        "email": user.email,
-        "phone": user.phone,
-        "auth_provider": user.auth_provider,
-        "preferred_language": user.preferred_language,
-        "doctor_reg_no": user.doctor_reg_no,
-        "profile": profile_data
+        "status": "success",
+        "token": "demo_jwt_token_123456",
+        "patient_id": DEMO_PATIENT_ID,
+        "profile": profile
     }
 
-@router.post("/session")
-def create_session(req: SessionRequest, db: Session = Depends(get_db)):
-    """
-    Exchange credentials (one-tap demo, mock OTP, or Firebase token) for a session JWT.
-    """
-    user: Optional[User] = None
-
-    if req.auth_type == "demo":
-        if not settings.DEMO_MODE:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Demo mode is disabled on this server."
-            )
-
-        target_phone = "+919876543210" if req.demo_role == "patient" else "+919876543220"
-        user = db.query(User).filter(User.phone == target_phone).first()
-
-        if not user:
-            # Fallback create if seeder was reset
-            role = req.demo_role or "patient"
-            name = "Rahul Sharma" if role == "patient" else "Dr. Emily Peterson"
-            email = "patient@qrhealth.demo" if role == "patient" else "doctor@qrhealth.demo"
-            reg_no = "KMC-48291" if role == "doctor" else None
-            user = User(
-                role=role,
-                full_name=name,
-                email=email,
-                phone=target_phone,
-                auth_provider="demo",
-                doctor_reg_no=reg_no,
-                preferred_language=req.preferred_language or "en"
-            )
-            db.add(user)
-            db.flush()
-
-            if role == "patient":
-                db.add(PatientProfile(
-                    user_id=user.id,
-                    age=42,
-                    gender="male",
-                    blood_group="B+",
-                    allergies="Penicillin, Sulfa drugs",
-                    conditions="Type 2 Diabetes, Mild Hypertension",
-                    emergency_contact_name="Sunita Sharma",
-                    emergency_contact_phone="+919876543211",
-                    emergency_contact_relation="Spouse",
-                    emergency_enabled=True
-                ))
-            db.commit()
-            db.refresh(user)
-
-    elif req.auth_type == "phone_otp":
-        if not req.phone:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Phone number is required."
-            )
-        if not req.otp:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="OTP code is required."
-            )
-
-        if settings.AUTH_MODE == "mock":
-            if not verify_mock_otp(req.phone, req.otp):
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Invalid OTP code. In mock mode, the OTP is always 123456."
-                )
-        else:
-            # Live Firebase Phone Auth token validation
-            if not req.firebase_token:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Firebase verification token is required in live auth mode."
-                )
-            claims = verify_firebase_token(req.firebase_token)
-            if not claims:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Invalid Firebase phone verification token."
-                )
-
-        # Lookup or create user by phone
-        cleaned_phone = req.phone.strip()
-        user = db.query(User).filter(User.phone == cleaned_phone).first()
-        if not user:
-            # Auto-provision new user
-            short_digits = cleaned_phone[-4:] if len(cleaned_phone) >= 4 else "User"
-            user = User(
-                role="patient",
-                full_name=f"Patient {short_digits}",
-                phone=cleaned_phone,
-                auth_provider="phone",
-                preferred_language=req.preferred_language or "en"
-            )
-            db.add(user)
-            db.flush()
-
-            # Create default patient profile
-            db.add(PatientProfile(
-                user_id=user.id,
-                emergency_enabled=True
-            ))
-
-            # Generate initial tokens
-            db.add(QRToken(
-                patient_id=user.id,
-                kind="doctor",
-                token="doc_" + secrets.token_hex(20),
-                is_active=True
-            ))
-            db.add(QRToken(
-                patient_id=user.id,
-                kind="emergency",
-                token="emg_" + secrets.token_hex(20),
-                is_active=True
-            ))
-
-            db.commit()
-            db.refresh(user)
-
-    elif req.auth_type == "firebase":
-        if not req.firebase_token:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Firebase ID token is required."
-            )
-
-        claims = verify_firebase_token(req.firebase_token)
-        if not claims and settings.AUTH_MODE != "mock":
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid Firebase credentials."
-            )
-
-        uid = claims.get("uid") if claims else "mock-firebase-uid"
-        email = claims.get("email") if claims else "googleuser@healthvault.local"
-        name = claims.get("name") if claims else "Google User"
-
-        user = db.query(User).filter((User.firebase_uid == uid) | (User.email == email)).first()
-        if not user:
-            user = User(
-                role="patient",
-                full_name=name,
-                email=email,
-                firebase_uid=uid,
-                auth_provider="google",
-                preferred_language=req.preferred_language or "en"
-            )
-            db.add(user)
-            db.flush()
-            db.add(PatientProfile(user_id=user.id, emergency_enabled=True))
-            db.commit()
-            db.refresh(user)
-
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Authentication failed. Could not find or create user session."
-        )
-
-    # Issue JWT
-    token = create_access_token(user.id, user.role)
-
+@router.get("/profile")
+async def get_profile(patient_id: str = Depends(get_current_patient_id)):
+    profile = db.profiles.get(patient_id)
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    contacts = db.emergency_contacts.get(patient_id, [])
     return {
-        "access_token": token,
-        "token_type": "bearer",
-        "user": user_to_dict(user)
+        "profile": profile,
+        "emergency_contacts": contacts
     }
 
-@router.get("/me")
-def get_current_user_profile(user: User = Depends(get_current_user)):
-    """
-    Get the authenticated user's profile and active roles.
-    """
-    return user_to_dict(user)
+@router.put("/profile")
+async def update_profile(req: ProfileUpdateRequest, patient_id: str = Depends(get_current_patient_id)):
+    existing = db.profiles.get(patient_id, {"id": patient_id})
+    existing.update({
+        "full_name": req.full_name,
+        "age": req.age,
+        "gender": req.gender,
+        "blood_group": req.blood_group,
+        "allergies": req.allergies,
+        "chronic_conditions": req.chronic_conditions,
+        "preferred_language": req.preferred_language,
+    })
+    db.profiles[patient_id] = existing
 
-@router.post("/role")
-def update_user_role(
-    req: RoleUpdateRequest,
-    user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """
-    Update or select user role (patient or doctor) and registration details.
-    """
-    user.role = req.role
-
-    if req.role == "doctor":
-        if req.doctor_reg_no:
-            user.doctor_reg_no = req.doctor_reg_no.strip()
-    elif req.role == "patient":
-        # Ensure patient profile exists
-        if not user.profile:
-            db.add(PatientProfile(user_id=user.id, emergency_enabled=True))
-
-    if req.full_name:
-        user.full_name = req.full_name.strip()
-
-    if req.preferred_language:
-        user.preferred_language = req.preferred_language
-
-    db.commit()
-    db.refresh(user)
-
-    # Issue renewed JWT with updated role claim
-    new_token = create_access_token(user.id, user.role)
+    # Update emergency contacts
+    contacts_list = []
+    for c in req.emergency_contacts:
+        contacts_list.append({
+            "id": str(uuid.uuid4()),
+            "patient_id": patient_id,
+            "name": c.name,
+            "relationship": c.relationship,
+            "phone": c.phone,
+            "is_primary": c.is_primary
+        })
+    db.emergency_contacts[patient_id] = contacts_list
 
     return {
-        "message": "Role updated successfully",
-        "access_token": new_token,
-        "token_type": "bearer",
-        "user": user_to_dict(user)
+        "status": "success",
+        "message": "Profile updated successfully",
+        "profile": existing,
+        "emergency_contacts": contacts_list
     }

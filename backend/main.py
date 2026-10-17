@@ -1,58 +1,63 @@
-import datetime
-from contextlib import asynccontextmanager
-from fastapi import FastAPI
+import os
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from backend.config import settings
-from backend.database import engine, Base
-from backend.seed import seed_database
+from fastapi.responses import JSONResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from dotenv import load_dotenv
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Ensure tables exist and database is seeded if in demo mode
-    Base.metadata.create_all(bind=engine)
-    if settings.DEMO_MODE:
-        seed_database()
-    yield
+# Load environment
+load_dotenv()
+
+from routers import auth, documents, medicines, qr, doctor, emergency
+
+# Rate Limiter setup
+limiter = Limiter(key_func=get_remote_address, default_limits=["120/minute"])
 
 app = FastAPI(
     title="QR Health Vault API",
-    description="Secure medical vault with AI explanation and QR emergency & doctor sharing",
-    version="1.0.0",
-    lifespan=lifespan
+    description="Your entire medical history, one scan away, explained in your language.",
+    version="1.0.0"
 )
 
-# CORS configuration
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# CORS Middleware
 origins = [
-    settings.FRONTEND_URL,
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "*"
+    os.getenv("FRONTEND_URL", "http://localhost:3000")
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"], # Permissive for hackathon testing
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-from backend.routers.auth import router as auth_router
+# Register Routers
+app.include_router(auth.router)
+app.include_router(documents.router)
+app.include_router(medicines.router)
+app.include_router(qr.router)
+app.include_router(doctor.router)
+app.include_router(emergency.router)
 
-app.include_router(auth_router, prefix="/api")
-
-@app.get("/")
-def read_root():
+@app.get("/health")
+async def health_check():
     return {
-        "app": "QR Health Vault API",
         "status": "healthy",
+        "service": "QR Health Vault Backend",
         "version": "1.0.0",
-        "auth_mode": settings.AUTH_MODE,
-        "demo_mode": settings.DEMO_MODE,
-        "ai_mode": settings.AI_MODE,
-        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()
+        "demo_mode": os.getenv("DEMO_MODE", "true").lower() == "true",
+        "ai_provider": os.getenv("AI_PROVIDER", "gemini")
     }
 
-@app.get("/api/health")
-def health_check():
-    return {"status": "ok", "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()}
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)

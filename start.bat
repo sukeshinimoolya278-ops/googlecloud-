@@ -1,15 +1,17 @@
 @echo off
-echo ========================================================
-echo Starting QR Health Vault Services (Backend + Frontend)
-echo ========================================================
+echo ===================================================
+echo Starting QR Health Vault (Backend + Frontend)
+echo ===================================================
 
-:: Seed and Start Backend
-start "QR Health Vault - Backend (:8000)" cmd /k "cd /d %~dp0 && backend\venv\Scripts\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload"
+echo Starting FastAPI Backend on http://localhost:8000 ...
+start "QR Health Vault - Backend" cmd /k "cd backend && python main.py"
 
-:: Start Frontend
-start "QR Health Vault - Frontend (:3000)" cmd /k "cd /d %~dp0frontend && npm run dev"
+echo Starting Next.js Frontend on http://localhost:3000 ...
+start "QR Health Vault - Frontend" cmd /k "cd frontend && npm run dev"
 
 echo.
-echo Backend launched at: http://127.0.0.1:8000
-echo Frontend launched at: http://localhost:3000
-echo ========================================================
+echo Both servers started!
+echo Frontend: http://localhost:3000
+echo Backend API: http://localhost:8000/docs
+echo Demo OTP: 123456
+echo ===================================================

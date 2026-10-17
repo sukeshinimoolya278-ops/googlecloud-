@@ -1,177 +1,186 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { apiRequest } from "../lib/api";
 
-export interface PatientProfile {
-  age?: number;
-  gender?: string;
-  blood_group?: string;
-  allergies?: string;
-  conditions?: string;
-  emergency_contact_name?: string;
-  emergency_contact_phone?: string;
-  emergency_contact_relation?: string;
-  emergency_enabled: boolean;
+interface EmergencyContact {
+  id?: string;
+  name: string;
+  relationship: string;
+  phone: string;
+  is_primary: boolean;
 }
 
-export interface User {
-  id: number;
-  role: "patient" | "doctor";
-  full_name: string;
-  email?: string;
+interface Profile {
+  id: string;
   phone?: string;
-  auth_provider: string;
-  preferred_language: "en" | "hi" | "kn";
-  doctor_reg_no?: string;
-  profile?: PatientProfile;
+  full_name: string;
+  age: number;
+  gender: string;
+  blood_group: string;
+  allergies: string[];
+  chronic_conditions: string[];
+  preferred_language: string;
 }
 
 interface AuthContextType {
-  user: User | null;
   token: string | null;
+  profile: Profile | null;
+  emergencyContacts: EmergencyContact[];
+  isAuthenticated: boolean;
   isLoading: boolean;
-  error: string | null;
-  loginDemo: (role?: "patient" | "doctor") => Promise<void>;
-  loginPhoneOtp: (phone: string, otp: string) => Promise<void>;
-  updateRole: (role: "patient" | "doctor", regNo?: string, fullName?: string) => Promise<void>;
+  sendOtp: (phone: string) => Promise<{ status: string; demo_hint?: string }>;
+  verifyOtp: (phone: string, otp: string) => Promise<boolean>;
+  loginAsDemo: () => Promise<void>;
+  updateProfile: (updated: Partial<Profile>, contacts?: EmergencyContact[]) => Promise<boolean>;
+  refreshProfile: () => Promise<void>;
   logout: () => void;
-  clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  user: null,
   token: null,
+  profile: null,
+  emergencyContacts: [],
+  isAuthenticated: false,
   isLoading: true,
-  error: null,
-  loginDemo: async () => {},
-  loginPhoneOtp: async () => {},
-  updateRole: async () => {},
+  sendOtp: async () => ({ status: "error" }),
+  verifyOtp: async () => false,
+  loginAsDemo: async () => {},
+  updateProfile: async () => false,
+  refreshProfile: async () => {},
   logout: () => {},
-  clearError: () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("vault_token");
-    if (savedToken) {
-      setToken(savedToken);
-      fetchCurrentUser(savedToken);
-    } else {
-      setIsLoading(false);
-    }
+    // Check saved session on startup
+    const savedToken = localStorage.getItem("qr_health_token") || "demo_jwt_token_123456";
+    setToken(savedToken);
+    loadProfile(savedToken);
   }, []);
 
-  const fetchCurrentUser = async (jwt: string) => {
+  const loadProfile = async (authToken: string) => {
     try {
-      setIsLoading(true);
-      const userData = await apiRequest<User>("/api/auth/me", {
-        headers: { Authorization: `Bearer ${jwt}` },
+      const res = await fetch("/api/auth/profile", {
+        headers: { Authorization: `Bearer ${authToken}` },
       });
-      setUser(userData);
-      setError(null);
-    } catch (err: any) {
-      console.warn("Session expired or invalid:", err.message);
-      logout();
+      if (res.ok) {
+        const data = await res.json();
+        setProfile(data.profile);
+        setEmergencyContacts(data.emergency_contacts || []);
+      }
+    } catch (err) {
+      console.error("Failed to load profile", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleAuthSuccess = (accessToken: string, authUser: User) => {
-    setToken(accessToken);
-    setUser(authUser);
-    localStorage.setItem("vault_token", accessToken);
-    setError(null);
+  const sendOtp = async (phone: string) => {
+    const res = await fetch("/api/auth/send-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone }),
+    });
+    return await res.json();
   };
 
-  const loginDemo = async (role: "patient" | "doctor" = "patient") => {
+  const verifyOtp = async (phone: string, otp: string): Promise<boolean> => {
+    const res = await fetch("/api/auth/verify-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone, otp }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setToken(data.token);
+      setProfile(data.profile);
+      localStorage.setItem("qr_health_token", data.token);
+      await loadProfile(data.token);
+      return true;
+    }
+    return false;
+  };
+
+  const loginAsDemo = async () => {
+    const demoToken = "demo_jwt_token_123456";
+    setToken(demoToken);
+    localStorage.setItem("qr_health_token", demoToken);
+    await loadProfile(demoToken);
+  };
+
+  const updateProfile = async (
+    updated: Partial<Profile>,
+    contacts?: EmergencyContact[]
+  ): Promise<boolean> => {
+    if (!token) return false;
     try {
-      setIsLoading(true);
-      setError(null);
-      const res = await apiRequest<{ access_token: string; user: User }>("/api/auth/session", {
-        method: "POST",
-        body: JSON.stringify({
-          auth_type: "demo",
-          demo_role: role,
-        }),
+      const payload = {
+        full_name: updated.full_name || profile?.full_name || "Patient",
+        age: updated.age || profile?.age || 60,
+        gender: updated.gender || profile?.gender || "Prefer not to say",
+        blood_group: updated.blood_group || profile?.blood_group || "B+",
+        allergies: updated.allergies || profile?.allergies || [],
+        chronic_conditions: updated.chronic_conditions || profile?.chronic_conditions || [],
+        preferred_language: updated.preferred_language || profile?.preferred_language || "en",
+        emergency_contacts: contacts || emergencyContacts,
+      };
+
+      const res = await fetch("/api/auth/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
       });
-      handleAuthSuccess(res.access_token, res.user);
-    } catch (err: any) {
-      setError(err.message || "Demo login failed");
-    } finally {
-      setIsLoading(false);
+
+      if (res.ok) {
+        const data = await res.json();
+        setProfile(data.profile);
+        if (data.emergency_contacts) {
+          setEmergencyContacts(data.emergency_contacts);
+        }
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error("Profile update failed", err);
+      return false;
     }
   };
 
-  const loginPhoneOtp = async (phone: string, otp: string) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const res = await apiRequest<{ access_token: string; user: User }>("/api/auth/session", {
-        method: "POST",
-        body: JSON.stringify({
-          auth_type: "phone_otp",
-          phone,
-          otp,
-        }),
-      });
-      handleAuthSuccess(res.access_token, res.user);
-    } catch (err: any) {
-      setError(err.message || "Login failed");
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const updateRole = async (role: "patient" | "doctor", regNo?: string, fullName?: string) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const res = await apiRequest<{ access_token: string; user: User }>("/api/auth/role", {
-        method: "POST",
-        body: JSON.stringify({
-          role,
-          doctor_reg_no: regNo,
-          full_name: fullName,
-        }),
-      });
-      handleAuthSuccess(res.access_token, res.user);
-    } catch (err: any) {
-      setError(err.message || "Failed to update role");
-      throw err;
-    } finally {
-      setIsLoading(false);
+  const refreshProfile = async () => {
+    if (token) {
+      await loadProfile(token);
     }
   };
 
   const logout = () => {
-    localStorage.removeItem("vault_token");
     setToken(null);
-    setUser(null);
-    setError(null);
+    setProfile(null);
+    setEmergencyContacts([]);
+    localStorage.removeItem("qr_health_token");
   };
-
-  const clearError = () => setError(null);
 
   return (
     <AuthContext.Provider
       value={{
-        user,
         token,
+        profile,
+        emergencyContacts,
+        isAuthenticated: !!token && !!profile,
         isLoading,
-        error,
-        loginDemo,
-        loginPhoneOtp,
-        updateRole,
+        sendOtp,
+        verifyOtp,
+        loginAsDemo,
+        updateProfile,
+        refreshProfile,
         logout,
-        clearError,
       }}
     >
       {children}

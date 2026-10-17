@@ -1,0 +1,29 @@
+{
+  "allergy_classes": {
+    "Penicillin": ["Amoxicillin", "Ampicillin", "Augmentin", "Moxikind CV", "Penicillin", "Piperacillin"],
+    "Sulfa drugs": ["Cotrimoxazole", "Septran", "Sulfamethoxazole", "Sulfadiazine"],
+    "NSAIDs": ["Aspirin", "Ibuprofen", "Diclofenac", "Aceclofenac", "Combiflam", "Zerodol P", "Voveran"]
+  },
+  "drug_interactions": [
+    {
+      "drugs": ["Metformin", "Contrast Dye"],
+      "severity": "high",
+      "warning": "Metformin combined with iodine contrast agents can increase lactic acidosis risk. Withhold 48 hours prior."
+    },
+    {
+      "drugs": ["Aspirin", "Ibuprofen"],
+      "severity": "medium",
+      "warning": "Taking NSAIDs with Aspirin increases gastrointestinal bleeding risk and reduces cardioprotective effects."
+    },
+    {
+      "drugs": ["Telmisartan", "Potassium Supplements"],
+      "severity": "medium",
+      "warning": "ARBs like Telmisartan retain potassium. Concurrent potassium supplements may lead to hyperkalemia."
+    },
+    {
+      "drugs": ["Atorvastatin", "Azithromycin"],
+      "severity": "low",
+      "warning": "Macrolides can marginally increase statin plasma concentrations. Monitor for muscle tenderness."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+APOLLO CLINICAL DIAGNOSTICS & RESEARCH CENTER
+124/B Hospital Road, Indiranagar, Bengaluru
+============================================================
+PATIENT NAME: Ramesh Sharma         AGE/GENDER: 62 Y / Male
+REF BY: Dr. Arvind Verma, MD        DATE: 15-Oct-2026
+SAMPLE: Fluoride Plasma / Serum    BARCODE: 8829104921
+============================================================
+TEST DESCRIPTION            RESULT   UNIT     BIOLOGICAL REF
+============================================================
+BIOCHEMISTRY
+- Fasting Blood Sugar (FBS) 138.0    mg/dL    70.0 - 99.0   [HIGH]
+- Glycated Hemoglobin (HbA1c) 7.4     %        4.0 - 5.6     [HIGH]
+- Estimated Average Glucose 165.0    mg/dL    80.0 - 120.0  [HIGH]
+
+RENAL FUNCTION
+- Serum Creatinine          1.10     mg/dL    0.70 - 1.30   [NORMAL]
+- Blood Urea Nitrogen       18.5     mg/dL    7.0 - 20.0    [NORMAL]
+
+HEMATOLOGY
+- Total Hemoglobin (Hb)     13.9     g/dL     13.0 - 17.0   [NORMAL]
+- Total WBC Count           7,400    /cumm    4,000 - 11,000 [NORMAL]
+============================================================
+*** END OF REPORT ***
+Validated by: Dr. S. K. Nambiar (Chief Pathologist)
