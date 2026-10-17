@@ -27,7 +27,7 @@ export function LanguageSwitcher() {
             onClick={() => setLanguage(lang.code)}
             className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
               isActive
-                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm scale-105"
+                ? "bg-purple-700 text-white shadow-sm scale-105"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
             }`}
           >

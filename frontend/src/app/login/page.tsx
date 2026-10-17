@@ -251,7 +251,7 @@ export default function LoginPage() {
 
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden">
         {/* Top Hero Brand Header */}
-        <div className="bg-gradient-to-tr from-purple-700 via-fuchsia-700 to-pink-600 p-7 text-white text-center relative overflow-hidden">
+        <div className="bg-purple-700 p-7 text-white text-center relative overflow-hidden">
           <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mx-auto mb-3.5 shadow-inner">
             <HeartPulse size={36} className="text-white" />
           </div>
@@ -290,7 +290,7 @@ export default function LoginPage() {
                 setError(null);
                 setMode("PHONE_INPUT");
               }}
-              className="w-full group flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-extrabold text-lg sm:text-xl shadow-lg shadow-purple-600/25 transition-all active:scale-[0.98]"
+              className="w-full group flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-lg sm:text-xl shadow-md transition-all active:scale-[0.98]"
             >
               <div className="flex items-center gap-3.5">
                 <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
@@ -414,7 +414,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading || phoneNumber.length < 7}
-              className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-extrabold text-lg shadow-lg shadow-purple-600/30 transition-all active:scale-[0.98] disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-lg shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
             >
               {loading ? (
                 <>
@@ -477,7 +477,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleVerifyOtp()}
               disabled={loading || otp.some((d) => !d)}
-              className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-extrabold text-lg shadow-lg shadow-purple-600/30 transition-all active:scale-[0.98] disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-lg shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
             >
               {loading ? (
                 <>

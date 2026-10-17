@@ -102,7 +102,7 @@ export default function HomePage() {
         {/* Left Column (lg:col-span-7) */}
         <div className="lg:col-span-7 space-y-5">
           {/* Hero Banner */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-700 via-fuchsia-600 to-pink-600 p-6 sm:p-8 text-white shadow-xl">
+          <div className="relative overflow-hidden rounded-3xl bg-purple-800 p-6 sm:p-8 text-white shadow-xl">
             <div className="relative z-10 space-y-4">
               <div className="inline-block px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-extrabold tracking-wide uppercase">
                 Emergency &amp; Clinical Lifeline
@@ -253,7 +253,7 @@ export default function HomePage() {
           </div>
 
           {/* AI Multilingual Translator Card */}
-          <div className="card-aesthetic p-5 bg-gradient-to-br from-purple-50/60 to-pink-50/40">
+          <div className="card-aesthetic p-5 bg-purple-50/80 border border-purple-100">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles size={16} className="text-purple-600" />
               <h4 className="font-bold text-slate-900 text-sm">

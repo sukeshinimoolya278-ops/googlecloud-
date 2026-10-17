@@ -111,7 +111,7 @@ export default function ReportsPage() {
         </div>
         <button
           onClick={() => setShowUpload(true)}
-          className="flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 text-white rounded-2xl text-sm font-bold shadow-md hover:opacity-95 transition-all self-start sm:self-auto"
+          className="flex items-center justify-center gap-2 px-5 py-3 bg-purple-700 hover:bg-purple-800 text-white rounded-2xl text-sm font-bold shadow-md transition-all self-start sm:self-auto"
         >
           <FileUp size={18} />
           <span>{t("uploadReport")}</span>
@@ -171,7 +171,7 @@ export default function ReportsPage() {
           {selectedDoc && docDetails ? (
             <>
               {/* Plain Language AI Explanation Card */}
-              <div className="rounded-3xl bg-gradient-to-br from-purple-50 via-fuchsia-50/50 to-pink-50/60 p-6 border border-purple-100 shadow-sm space-y-4">
+              <div className="rounded-3xl bg-purple-50/80 p-6 border border-purple-100 shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <div className="p-2 rounded-2xl bg-purple-600 text-white shadow-sm">
@@ -220,7 +220,7 @@ export default function ReportsPage() {
               </div>
 
               {/* Official Document & Identity Cross-Check Audit Card */}
-              <div className="card-aesthetic p-5 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50/70 to-teal-50/50 space-y-3">
+              <div className="card-aesthetic p-5 border-2 border-emerald-200 bg-emerald-50/60 space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-200/80 pb-3">
                   <div className="flex items-center gap-2">
                     <div className="p-2 bg-emerald-600 text-white rounded-xl shadow-xs">

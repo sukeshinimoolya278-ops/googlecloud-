@@ -110,7 +110,7 @@ export default function MedicinesPage() {
               <div>
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-start gap-3">
-                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-500 to-pink-500 text-white flex items-center justify-center shadow-sm shrink-0">
+                    <div className="w-11 h-11 rounded-2xl bg-purple-700 text-white flex items-center justify-center shadow-sm shrink-0">
                       <Pill size={22} />
                     </div>
                     <div>

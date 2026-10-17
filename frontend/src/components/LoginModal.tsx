@@ -63,7 +63,7 @@ export function LoginModal({ onClose }: LoginModalProps) {
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl border border-slate-200 overflow-hidden">
         {/* Header */}
-        <div className="p-6 bg-gradient-to-br from-purple-700 via-fuchsia-600 to-pink-600 text-white relative">
+        <div className="p-6 bg-purple-700 text-white relative">
           {onClose && (
             <button
               onClick={onClose}

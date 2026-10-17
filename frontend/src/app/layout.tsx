@@ -21,13 +21,13 @@ function HeaderBar() {
       <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 via-fuchsia-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-fuchsia-500/20">
+          <div className="w-9 h-9 rounded-xl bg-purple-700 flex items-center justify-center text-white shadow-md">
             <HeartPulse size={20} />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
               <span className="font-extrabold text-slate-900 tracking-tight text-base sm:text-lg">
-                Health<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Vault</span>
+                Health<span className="text-purple-700">Vault</span>
               </span>
               <span className="badge-pill-green text-[10px] py-0 px-2">
                 Active
@@ -68,7 +68,7 @@ function HeaderBar() {
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs font-extrabold transition-all shadow-xs"
+              className="flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-purple-700 hover:bg-purple-800 text-white text-xs font-extrabold transition-all shadow-xs"
             >
               <LogIn size={13} />
               <span>Sign In</span>

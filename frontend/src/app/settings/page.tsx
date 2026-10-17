@@ -285,7 +285,7 @@ export default function SettingsPage() {
           type="button"
           onClick={handleSaveProfile}
           disabled={saving}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 py-3 px-6 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-extrabold text-base shadow-md shadow-purple-600/30 transition-all active:scale-95 disabled:opacity-50"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 py-3 px-6 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-base shadow-md transition-all active:scale-95 disabled:opacity-50"
         >
           {saving ? <RefreshCw size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
           <span>{saving ? "Saving..." : "Save Changes"}</span>

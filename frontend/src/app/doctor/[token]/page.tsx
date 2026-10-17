@@ -147,7 +147,7 @@ export default function DoctorPortalPage() {
       </div>
 
       {/* One-Page Clinical AI Summary */}
-      <div className="card-aesthetic p-5 bg-gradient-to-br from-purple-50/50 to-pink-50/30">
+      <div className="card-aesthetic p-5 bg-purple-50/80 border border-purple-100">
         <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 text-sm">
           <Sparkles size={16} className="text-purple-600" />
           <span>One-Page Clinical Summary</span>

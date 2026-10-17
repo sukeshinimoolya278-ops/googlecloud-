@@ -55,7 +55,7 @@ export function OnboardingModal({ onComplete }: { onComplete: () => void }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
       <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-700 via-fuchsia-700 to-pink-600 p-6 text-white text-center relative">
+        <div className="bg-purple-700 p-6 text-white text-center relative">
           <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
             <HeartPulse size={30} className="text-white" />
           </div>
@@ -181,7 +181,7 @@ export function OnboardingModal({ onComplete }: { onComplete: () => void }) {
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="w-full sm:w-auto order-1 sm:order-2 flex items-center justify-center gap-2 py-3.5 px-7 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-extrabold text-base shadow-lg shadow-purple-600/30 transition-all active:scale-95 disabled:opacity-50"
+            className="w-full sm:w-auto order-1 sm:order-2 flex items-center justify-center gap-2 py-3.5 px-7 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-base shadow-md transition-all active:scale-95 disabled:opacity-50"
           >
             <Sparkles size={18} />
             <span>{saving ? "Saving..." : "Save & Continue"}</span>
