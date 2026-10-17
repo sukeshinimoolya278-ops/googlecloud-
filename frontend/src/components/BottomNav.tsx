@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "../context/LanguageContext";
-import { Home, FileText, Pill, QrCode } from "lucide-react";
+import { Home, FileText, Pill, QrCode, Settings } from "lucide-react";
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -15,11 +15,12 @@ export function BottomNav() {
     { href: "/reports", label: t("reports"), icon: FileText },
     { href: "/medicines", label: t("medicines"), icon: Pill },
     { href: "/qr", label: t("qr"), icon: QrCode },
+    { href: "/settings", label: "Settings", icon: Settings },
   ];
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
-      <div className="max-w-md mx-auto grid grid-cols-4 h-16">
+      <div className="max-w-md mx-auto grid grid-cols-5 h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;

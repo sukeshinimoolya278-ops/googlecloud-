@@ -1,21 +1,25 @@
 // Global in-memory mock store for standalone Next.js deployment on Vercel
 
 export interface EmergencyContact {
-  id: string;
-  patient_id: string;
+  id?: string;
+  patient_id?: string;
   name: string;
   relationship: string;
   phone: string;
-  is_primary: boolean;
+  is_primary?: boolean;
 }
 
 export interface Profile {
   id: string;
+  uid?: string;
   phone: string;
+  email?: string;
   full_name: string;
+  dob?: string;
   age: number;
   gender: string;
   blood_group: string;
+  photo_url?: string;
   allergies: string[];
   chronic_conditions: string[];
   preferred_language: string;
@@ -24,6 +28,8 @@ export interface Profile {
   abha_address?: string;
   identity_status?: string;
   verified_via?: string;
+  verified_methods?: string[];
+  onboarding_completed?: boolean;
 }
 
 export interface ClinicalDocument {
@@ -57,11 +63,15 @@ const now = new Date();
 export const demoStore = {
   profile: {
     id: DEMO_PATIENT_ID,
+    uid: DEMO_PATIENT_ID,
     phone: "+919876543210",
+    email: "ramesh.sharma@example.com",
     full_name: "Ramesh Sharma",
+    dob: "1964-04-12",
     age: 62,
     gender: "Male",
     blood_group: "B+",
+    photo_url: "",
     allergies: ["Penicillin", "Sulfa drugs"],
     chronic_conditions: ["Type 2 Diabetes Mellitus", "Hypertension"],
     preferred_language: "hi",
@@ -70,6 +80,8 @@ export const demoStore = {
     abha_address: "ramesh.sharma@abdm",
     identity_status: "VERIFIED_GOVT_ID",
     verified_via: "Aadhaar e-KYC & ABDM Registry",
+    verified_methods: ["phone", "google"],
+    onboarding_completed: true,
   } as Profile,
 
   emergencyContacts: [

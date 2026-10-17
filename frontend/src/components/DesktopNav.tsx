@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "../context/LanguageContext";
-import { Home, FileText, Pill, QrCode, ShieldAlert } from "lucide-react";
+import { Home, FileText, Pill, QrCode, ShieldAlert, Settings } from "lucide-react";
 
 export function DesktopNav() {
   const pathname = usePathname();
@@ -15,6 +15,7 @@ export function DesktopNav() {
     { href: "/reports", label: t("reports"), icon: FileText },
     { href: "/medicines", label: t("medicines"), icon: Pill },
     { href: "/qr", label: t("qr"), icon: QrCode },
+    { href: "/settings", label: "Settings", icon: Settings },
   ];
 
   return (

@@ -25,15 +25,16 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # CORS Middleware
-origins = [
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
+origins = list(set([
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    os.getenv("FRONTEND_URL", "http://localhost:3000")
-]
+    frontend_url,
+]))
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Permissive for hackathon testing
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

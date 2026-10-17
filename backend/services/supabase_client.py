@@ -31,11 +31,15 @@ class HealthVaultDB:
         """Seed initial patient state for Ramesh Sharma"""
         self.profiles[DEMO_PATIENT_ID] = {
             "id": DEMO_PATIENT_ID,
+            "uid": DEMO_PATIENT_ID,
             "phone": "+919876543210",
+            "email": "ramesh.sharma@example.com",
             "full_name": "Ramesh Sharma",
+            "dob": "1964-04-12",
             "age": 62,
             "gender": "Male",
             "blood_group": "B+",
+            "photo_url": "",
             "allergies": ["Penicillin", "Sulfa drugs"],
             "chronic_conditions": ["Type 2 Diabetes Mellitus", "Hypertension"],
             "preferred_language": "hi",
@@ -43,7 +47,9 @@ class HealthVaultDB:
             "abha_id": "91-4829-1029-4821",
             "abha_address": "ramesh.sharma@abdm",
             "identity_status": "VERIFIED_GOVT_ID",
-            "verified_via": "Aadhaar e-KYC & ABDM Registry"
+            "verified_via": "Aadhaar e-KYC & ABDM Registry",
+            "verified_methods": ["phone", "google"],
+            "onboarding_completed": True
         }
 
         self.emergency_contacts[DEMO_PATIENT_ID] = [
@@ -176,5 +182,116 @@ class HealthVaultDB:
             {"id": str(uuid.uuid4()), "patient_id": DEMO_PATIENT_ID, "access_type": "doctor_view", "requester_label": "Apollo Emergency Dept (Dr. Mehta)", "ip_hash": "ip_hash_xyz_2", "user_agent": "Chrome Desktop", "timestamp": (now - datetime.timedelta(hours=2)).isoformat()}
         ]
 
+    def get_or_create_user(self, uid: str, phone: Optional[str] = None, email: Optional[str] = None, name: Optional[str] = None) -> Dict[str, Any]:
+        """Fetch existing user record or create a fresh one on first login"""
+        if uid in self.profiles:
+            profile = self.profiles[uid]
+            # Update phone/email if new and verified
+            if phone and not profile.get("phone"):
+                profile["phone"] = phone
+                if "phone" not in profile.get("verified_methods", []):
+                    profile.setdefault("verified_methods", []).append("phone")
+            if email and not profile.get("email"):
+                profile["email"] = email
+                if "google" not in profile.get("verified_methods", []):
+                    profile.setdefault("verified_methods", []).append("google")
+            if name and (not profile.get("full_name") or profile.get("full_name") == "New Patient"):
+                profile["full_name"] = name
+            return profile
+
+        # Create new profile
+        verified_methods = []
+        if phone:
+            verified_methods.append("phone")
+        if email:
+            verified_methods.append("google")
+
+        new_profile = {
+            "id": uid,
+            "uid": uid,
+            "phone": phone or "",
+            "email": email or "",
+            "full_name": name or "New Patient",
+            "dob": "",
+            "age": 0,
+            "gender": "Prefer not to say",
+            "blood_group": "Unknown",
+            "photo_url": "",
+            "allergies": [],
+            "chronic_conditions": [],
+            "preferred_language": "en",
+            "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "abha_id": "",
+            "abha_address": "",
+            "identity_status": "PENDING_VERIFICATION",
+            "verified_via": "Self-Declared",
+            "verified_methods": verified_methods,
+            "onboarding_completed": False
+        }
+        self.profiles[uid] = new_profile
+        self.emergency_contacts[uid] = []
+        return new_profile
+
+    def get_active_shares(self, uid: str) -> List[Dict[str, Any]]:
+        """Get all active QR share sessions for this user"""
+        shares = []
+        now = datetime.datetime.now(datetime.timezone.utc)
+        for token, record in self.qr_tokens.items():
+            if record.get("patient_id") == uid and record.get("active", True):
+                # Check if access request exists with expiration
+                expires_at = None
+                label = "Doctor Scan Access" if record.get("type") == "full" else "Emergency Lock Screen Link"
+                for req in self.access_requests.values():
+                    if req.get("token") == token:
+                        expires_at = req.get("expires_at")
+                        label = req.get("requester_label", label)
+                        break
+                shares.append({
+                    "id": record.get("id"),
+                    "token": token,
+                    "type": record.get("type"),
+                    "label": label,
+                    "active": True,
+                    "expires_at": expires_at or (now + datetime.timedelta(days=7)).isoformat(),
+                    "created_at": record.get("created_at", now.isoformat())
+                })
+        return shares
+
+    def revoke_share(self, uid: str, token: str) -> bool:
+        """Revoke an active QR share session"""
+        found = False
+        if token in self.qr_tokens and self.qr_tokens[token].get("patient_id") == uid:
+            self.qr_tokens[token]["active"] = False
+            found = True
+        for req in self.access_requests.values():
+            if req.get("token") == token and req.get("patient_id") == uid:
+                req["status"] = "revoked"
+                found = True
+        return found
+
+    def delete_user_data(self, uid: str) -> bool:
+        """Danger Zone: Wipe all data associated with a user UID"""
+        if uid in self.profiles:
+            del self.profiles[uid]
+        if uid in self.emergency_contacts:
+            del self.emergency_contacts[uid]
+        # Delete docs
+        doc_ids_to_del = [k for k, v in self.documents.items() if v.get("patient_id") == uid]
+        for d in doc_ids_to_del:
+            del self.documents[d]
+        # Delete medicines
+        if uid in self.medicines:
+            del self.medicines[uid]
+        # Delete QR tokens
+        tokens_to_del = [k for k, v in self.qr_tokens.items() if v.get("patient_id") == uid]
+        for t in tokens_to_del:
+            del self.qr_tokens[t]
+        # Delete requests
+        req_to_del = [k for k, v in self.access_requests.items() if v.get("patient_id") == uid]
+        for r in req_to_del:
+            del self.access_requests[r]
+        return True
+
 # Global DB instance
 db = HealthVaultDB()
+
