@@ -1,6 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { LanguageProvider } from "../context/LanguageContext";
+import { AuthProvider } from "../context/AuthContext";
 
 type Theme = "dark" | "light";
 
@@ -28,13 +30,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
-    // Read persisted theme or system preference
     const savedTheme = localStorage.getItem("vault_theme") as Theme | null;
-    const initialTheme = savedTheme || "dark"; // default to the sleek dark biometric UI from image
+    const initialTheme = savedTheme || "dark";
     setTheme(initialTheme);
     document.documentElement.setAttribute("data-theme", initialTheme);
 
-    // Read persisted font scale
     const savedScale = localStorage.getItem("vault_font_scale");
     if (savedScale) {
       const parsed = parseFloat(savedScale);
@@ -84,7 +84,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         resetFontSize,
       }}
     >
-      <div style={{ opacity: mounted ? 1 : 0.98 }}>{children}</div>
+      <LanguageProvider>
+        <AuthProvider>
+          <div style={{ opacity: mounted ? 1 : 0.98 }}>{children}</div>
+        </AuthProvider>
+      </LanguageProvider>
     </ThemeContext.Provider>
   );
 }
